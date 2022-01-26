@@ -18,7 +18,7 @@ $config = [
         ],
         'admin' => [
             'class' => 'mdm\admin\Module',
-            //'layout' => 'left-menu', 
+            'layout' => 'left-menu', 
         ]
     ],////////////////////////
     'components' => [
@@ -35,7 +35,8 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            //'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\Usuario',
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
@@ -69,7 +70,7 @@ $config = [
     ],
     ////////////////////////////
     'as access' => [
-        'class' => 'mdm\admin\classes\AccessControl',
+        'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
             'site/*',
             'admin/*',
