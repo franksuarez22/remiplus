@@ -1,37 +1,46 @@
 <?php
 use yii\helpers\Url;
-use yii\helpers\Html;
-use yii\bootstrap\Modal;
+use yii\bootstrap4\Html;
+use yii\bootstrap4\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset; 
 use johnitvn\ajaxcrud\BulkButtonWidget;
+use mdm\admin\components\Helper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\GeneroSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Generos';
+$this->title = Yii::t('app', 'Generos');
 $this->params['breadcrumbs'][] = $this->title;
 
 CrudAsset::register($this);
 
+$nuevo=$exportar='';
+    if(Helper::checkRoute('create')){
+       $nuevo = Html::a('<i class="glyphicon glyphicon-plus"></i>', ['/genero/create'],
+                ['role'=>'modal-remote','title'=> 'Nuevo Generos','class'=>'btn btn-default']);
+    }
+
+    if(Helper::checkRoute('gridview/export/download')){
+       $exportar = '{export}';
+    }
 ?>
 <div class="genero-index">
     <div id="ajaxCrudDatatable">
         <?=GridView::widget([
-            'id'=>'crud-datatable',
+            'id'=>'crud-datatable-genero',
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
             'pjax'=>true,
             'columns' => require(__DIR__.'/_columns.php'),
             'toolbar'=> [
                 ['content'=>
-                    Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],
-                    ['role'=>'modal-remote','title'=> 'Create new Generos','class'=>'btn btn-default']).
-                    Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''],
-                    ['data-pjax'=>1, 'class'=>'btn btn-default', 'title'=>'Reset Grid']).
+                    $nuevo.
+                    Html::a('<i class="glyphicon glyphicon-repeat"></i>', Url::to(''),
+                    ['data-pjax'=>1, 'class'=>'btn btn-default', 'title'=>'Actualizar']).
                     '{toggleData}'.
-                    '{export}'
+                    $exportar
                 ],
             ],          
             'striped' => true,
@@ -39,21 +48,21 @@ CrudAsset::register($this);
             'responsive' => true,          
             'panel' => [
                 'type' => 'primary', 
-                'heading' => '<i class="glyphicon glyphicon-list"></i> Generos listing',
-                'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
-                'after'=>BulkButtonWidget::widget([
-                            'buttons'=>Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Delete All',
+                'heading' => '<i class="glyphicon glyphicon-list"></i> Listado de Generos',
+                'before'=>'<em>* Cambie el tamaño de las columnas de la tabla como una hoja de cálculo arrastrando los bordes de la columna.</em>',
+                'after'=>Helper::checkRoute('bulk-delete') ? BulkButtonWidget::widget([
+                            'buttons'=>Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Borrar Todo',
                                 ["bulk-delete"] ,
                                 [
                                     "class"=>"btn btn-danger btn-xs",
                                     'role'=>'modal-remote-bulk',
                                     'data-confirm'=>false, 'data-method'=>false,// for overide yii data api
                                     'data-request-method'=>'post',
-                                    'data-confirm-title'=>'Are you sure?',
-                                    'data-confirm-message'=>'Are you sure want to delete this item'
+                                    'data-confirm-title'=>'¿Está seguro?',
+                                    'data-confirm-message'=>'¿Está seguro que desea borrar los registros seleccionados?'
                                 ]),
                         ]).                        
-                        '<div class="clearfix"></div>',
+                        '<div class="clearfix"></div>':'',
             ]
         ])?>
     </div>
@@ -61,5 +70,7 @@ CrudAsset::register($this);
 <?php Modal::begin([
     "id"=>"ajaxCrudModal",
     "footer"=>"",// always need it for jquery plugin
+    "size"=>Modal::SIZE_LARGE,
+    "dialogOptions"=>["data-modal-size"=>Modal::SIZE_LARGE,]
 ])?>
 <?php Modal::end(); ?>

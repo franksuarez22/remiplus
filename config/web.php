@@ -6,12 +6,13 @@ $db = require __DIR__ . '/db.php';
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
+    'language' => 'es',
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
-    'modules' => [////////////////////////
+    'modules' => [
         'gridview' => ['class' => \kartik\grid\Module::class,
         'bsVersion' => '4.x',
         'downloadAction' => 'gridview/export/download'
@@ -20,15 +21,11 @@ $config = [
             'class' => 'mdm\admin\Module',
             'layout' => 'left-menu', 
         ]
-    ],////////////////////////
+    ],
     'components' => [
-    	//////////////////////////////////
         'logSeguridad' => ['class' => 'app\components\ObtenerLogSeguridad',],
         'authManager' => [
             'class' => 'yii\rbac\DbManager', // or use 'yii\rbac\DbManager'
-        ],///////////////////////////////
-        'authManager' => [
-            'class' => 'yii\rbac\DbManager',
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -38,9 +35,10 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            //'identityClass' => 'app\models\User',
-            'identityClass' => 'app\models\Usuario',
+            'identityClass' => 'mdm\admin\models\User',
+            //'identityClass' => 'app\models\Usuario',
             'enableAutoLogin' => true,
+            'loginUrl' => ['admin/user/login'],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -62,16 +60,16 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
-        'urlManager' => [
+        /*'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '<controller:\w+>/<id:\d+>' => '<controller>/view',
+                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>'
             ],
-        ],
-        */
+        ],*/
     ],
-    ////////////////////////////
     'as access' => [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
@@ -87,7 +85,7 @@ $config = [
             // add a lot of actions here until you finally completed setting up rbac,
             // otherwise you may not even take a first step.
         ]
-    ],//////////////////////////
+    ],
     'params' => $params,
 ];
 

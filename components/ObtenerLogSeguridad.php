@@ -19,7 +19,7 @@ class ObtenerLogSeguridad {
         // init es llamado por Yii, debido a que es un componente.
     }
 
-    public function getRealIpAddr() {
+    public static function getRealIpAddr() {
         $informe_ip = '';
         $remote_ip = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : '(Sin IP)';
         $remote_isp = gethostbyaddr($remote_ip);
@@ -33,7 +33,7 @@ class ObtenerLogSeguridad {
         return $informe_ip;
     }
     
-    public function cdbexpression() {
+    public static function cdbexpression() {
         $expression = new Expression('NOW()');
         $now = (new \yii\db\Query)->select($expression)->scalar();  // SELECT NOW();
         return $now; // prints the current date

@@ -1,34 +1,34 @@
 <?php
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap4\Html;
+use yii\bootstrap4\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Estados */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $form yii\bootstrap4\ActiveForm */
 ?>
 
 <div class="estados-form">
 
-    <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'estado')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'ip_log')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'usuario_creador')->textInput() ?>
-
-    <?= $form->field($model, 'usuario_modificador')->textInput() ?>
-
-    <?= $form->field($model, 'fecha_creacion')->textInput() ?>
-
-    <?= $form->field($model, 'fecha_modificacion')->textInput() ?>
-
-    <?= $form->field($model, 'estatus')->checkbox() ?>
-
-  
+    <?php $form = ActiveForm::begin([
+            'enableAjaxValidation' => false,
+            'enableClientValidation' => true,
+            'options' => [
+                'enctype' => 'multipart/form-data'       
+            ]
+        ]); ?>
+<div class="form-row">
+    <div class='col-md-4'>
+        <?= $form->field($model, 'estado')->textInput(['maxlength' => true]) ?>
+    </div>
+    <?php /**/if(!$model->isNewRecord){/**/ ?>
+        <div class='col-md-4'>
+              <?= $form->field($model, "estatus")->checkbox() ?>
+        </div>
+    <?php } ?>  
+</div>    
 	<?php if (!Yii::$app->request->isAjax){ ?>
 	  	<div class="form-group">
-	        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+	        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Guardar') : Yii::t('app', 'Editar'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
 	    </div>
 	<?php } ?>
 

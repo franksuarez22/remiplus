@@ -82,3 +82,12 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+.show {
+    opacity: unset;
+}
+
+.input-group-addon {
+    padding: 1%;
+    width: 10%;
+}

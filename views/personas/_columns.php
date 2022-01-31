@@ -1,5 +1,7 @@
 <?php
 use yii\helpers\Url;
+use yii\bootstrap4\Html;
+use mdm\admin\components\Helper;
 
 return [
     [
@@ -10,10 +12,10 @@ return [
         'class' => 'kartik\grid\SerialColumn',
         'width' => '30px',
     ],
-        [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'id_persona',
-    ],
+        // [
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'id_persona',
+    // ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_genero',
@@ -30,14 +32,14 @@ return [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_ciudad',
     ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'cedula',
-    // ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'primer_nombre',
-    // ],
+    [
+        'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'cedula',
+    ],
+    [
+        'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'primer_nombre',
+    ],
     // [
         // 'class'=>'\kartik\grid\DataColumn',
         // 'attribute'=>'segundo_nombre',
@@ -90,17 +92,18 @@ return [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
         'vAlign'=>'middle',
+        'template' => Helper::filterActionColumn('{view} {update} {delete}'),
         'urlCreator' => function($action, $model, $key, $index) { 
-                return Url::to([$action,'id'=>$key]);
+                return Url::to(['/personas/'.$action,'id'=>$key]);
         },
-        'viewOptions'=>['role'=>'modal-remote','title'=>'View','data-toggle'=>'tooltip'],
-        'updateOptions'=>['role'=>'modal-remote','title'=>'Update', 'data-toggle'=>'tooltip'],
-        'deleteOptions'=>['role'=>'modal-remote','title'=>'Delete', 
+        'viewOptions'=>['role'=>'modal-remote','title'=>'Ver','data-toggle'=>'tooltip'],
+        'updateOptions'=>['role'=>'modal-remote','title'=>'Editar', 'data-toggle'=>'tooltip'],
+        'deleteOptions'=>['role'=>'modal-remote','title'=>'Borrar', 
                           'data-confirm'=>false, 'data-method'=>false,// for overide yii data api
                           'data-request-method'=>'post',
                           'data-toggle'=>'tooltip',
-                          'data-confirm-title'=>'Are you sure?',
-                          'data-confirm-message'=>'Are you sure want to delete this item'], 
+                          'data-confirm-title'=>'¿Está seguro?',
+                          'data-confirm-message'=>'¿Está seguro que desea borrar este registro?'], 
     ],
 
 ];   

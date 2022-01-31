@@ -62,7 +62,7 @@ class EstatusincidenciaSearch extends Estatusincidencia
             'usuario_modificador' => $this->usuario_modificador,
             'fecha_creacion' => $this->fecha_creacion,
             'fecha_modificacion' => $this->fecha_modificacion,
-            'estatus' => $this->estatus,
+            'estatus' => true,
         ]);
 
         $query->andFilterWhere(['like', 'estatus_incidencia', $this->estatus_incidencia])
