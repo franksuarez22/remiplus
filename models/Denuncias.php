@@ -66,10 +66,10 @@ class Denuncias extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_denuncia' => Yii::t('app', 'Id Denuncia'),
-            'id_tipo_incidencia' => Yii::t('app', 'Id Tipo Incidencia'),
-            'id_parroquia' => Yii::t('app', 'Id Parroquia'),
-            'id_ciudad' => Yii::t('app', 'Id Ciudad'),
+            'id_denuncia' => Yii::t('app', 'Denuncia'),
+            'id_tipo_incidencia' => Yii::t('app', 'Tipo de Incidencia'),
+            'id_parroquia' => Yii::t('app', 'Parroquia'),
+            'id_ciudad' => Yii::t('app', 'Ciudad'),
             'descripcion' => Yii::t('app', 'Descripcion'),
             'direccion' => Yii::t('app', 'Direccion'),
             'punto_referencia' => Yii::t('app', 'Punto Referencia'),

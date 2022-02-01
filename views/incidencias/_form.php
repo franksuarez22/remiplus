@@ -22,24 +22,8 @@ MapAsset::register($this);
                 'enctype' => 'multipart/form-data'       
             ]
         ]); ?>
-<div class="form-row">
-    <div class='col-md-6'>
-        <?php 
-            $tipo_incidencia = app\models\Tipoincidencia::find(['estatus' => true])->all();
-            $lista_tipo_incidencia = ArrayHelper::map($tipo_incidencia,'id_tipo_incidencia','nombre_tipo_incidencia');
-            echo $form->field($model, 'id_tipo_incidencia')->widget(Select2::classname(), [
-                'data' => $lista_tipo_incidencia,
-                'options' => [
-                    'placeholder' => 'Seleccione...',
-                    'id'=>'tipo_incidencia',
-                    'class'=>'select2'
-                    ],
-                'pluginOptions' => [
-                    'allowClear' => true
-                ],
-            ]);
-        ?>
-    </div>
+     <h3><div align="left">Registro de incidencias</div></h3>
+    <div class="form-row">
     <div class='col-md-6'>
             <?php 
                 $estados = app\models\Estados::find(['estatus' => true])->all();
@@ -122,13 +106,33 @@ MapAsset::register($this);
     <div class='col-md-12'>
         <?= $form->field($model, 'descripcion')->textarea(['rows' => 6]) ?>
     </div>
+        <h3><div align="center">Detalle de incidencias</div></h3>
+        <div class='col-md-6'>
+        </div>
+        <div class='col-md-6'><br>
+        <?php 
+            $tipo_incidencia = app\models\Tipoincidencia::find(['estatus' => true])->all();
+            $lista_tipo_incidencia = ArrayHelper::map($tipo_incidencia,'id_tipo_incidencia','nombre_tipo_incidencia');
+            echo $form->field($model, 'id_tipo_incidencia')->widget(Select2::classname(), [
+                'data' => $lista_tipo_incidencia,
+                'options' => [
+                    'placeholder' => 'Seleccione...',
+                    'id'=>'tipo_incidencia',
+                    'class'=>'select2'
+                    ],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+            ]);
+        ?>
+    </div>
     <div class='col-md-6'>
         <?= $form->field($model, 'latitud')->hiddenInput()->label(false) ?>
         <?= $form->field($model, 'longitud')->hiddenInput()->label(false) ?>
     </div>
     <div class='col-md-12'>
         <div id="map"></div>
-    </div><br><br>
+    </div><br><br>  
     <div class='col-md-12'>
         <?= $form->field($model, 'direccion')->textarea(['rows' => 6]) ?>
     </div>

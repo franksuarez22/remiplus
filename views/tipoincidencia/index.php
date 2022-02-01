@@ -8,29 +8,28 @@ use johnitvn\ajaxcrud\BulkButtonWidget;
 use mdm\admin\components\Helper;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\IncidenciasSearch */
+/* @var $searchModel app\models\TipoincidenciaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Registro de Denuncias');
-$this->title = Yii::t('app', 'Incidencias');
+$this->title = Yii::t('app', 'Tipoincidencias');
 $this->params['breadcrumbs'][] = $this->title;
 
 CrudAsset::register($this);
 
 $nuevo=$exportar='';
     if(Helper::checkRoute('create')){
-       $nuevo = Html::a('<i class="glyphicon glyphicon-plus"></i>', ['/incidencias/create'],
-                ['role'=>'modal-remote','title'=> 'Nuevo Incidencias','class'=>'btn btn-default']);
+       $nuevo = Html::a('<i class="glyphicon glyphicon-plus"></i>', ['/tipoincidencia/create'],
+                ['role'=>'modal-remote','title'=> 'Nuevo Tipoincidencias','class'=>'btn btn-default']);
     }
 
     if(Helper::checkRoute('gridview/export/download')){
        $exportar = '{export}';
     }
 ?>
-<div class="incidencias-index">
+<div class="tipoincidencia-index">
     <div id="ajaxCrudDatatable">
         <?=GridView::widget([
-            'id'=>'crud-datatable-incidencias',
+            'id'=>'crud-datatable-tipoincidencia',
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
             'pjax'=>true,
@@ -49,7 +48,7 @@ $nuevo=$exportar='';
             'responsive' => true,          
             'panel' => [
                 'type' => 'primary', 
-                'heading' => '<i class="glyphicon glyphicon-list"></i> Listado de Incidencias',
+                'heading' => '<i class="glyphicon glyphicon-list"></i> Listado de Tipoincidencias',
                 'before'=>'<em>* Cambie el tamaño de las columnas de la tabla como una hoja de cálculo arrastrando los bordes de la columna.</em>',
                 'after'=>Helper::checkRoute('bulk-delete') ? BulkButtonWidget::widget([
                             'buttons'=>Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Borrar Todo',

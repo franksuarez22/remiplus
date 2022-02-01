@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Usuario;
+use app\models\Categoriaincidencia;
 
 /**
- * UsuarioSearch represents the model behind the search form about `app\models\Usuario`.
+ * CategoriaincidenciaSearch represents the model behind the search form about `app\models\Categoriaincidencia`.
  */
-class UsuarioSearch extends Usuario
+class CategoriaincidenciaSearch extends Categoriaincidencia
 {
     /**
      * @inheritdoc
@@ -18,9 +18,9 @@ class UsuarioSearch extends Usuario
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['username', 'names', 'password'], 'safe'],
-            [['status'], 'boolean'],
+            [['id_categoria_incidencia', 'usuario_creador', 'usuario_modificador'], 'integer'],
+            [['nombre_categoria_incidencia', 'ip_log', 'fecha_creacion', 'fecha_modificacion'], 'safe'],
+            [['estatus'], 'boolean'],
         ];
     }
 
@@ -42,7 +42,7 @@ class UsuarioSearch extends Usuario
      */
     public function search($params)
     {
-        $query = Usuario::find();
+        $query = Categoriaincidencia::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -57,13 +57,16 @@ class UsuarioSearch extends Usuario
         }
 
         $query->andFilterWhere([
-            'id' => $this->id,
-            'status' => $this->status,
+            'id_categoria_incidencia' => $this->id_categoria_incidencia,
+            'usuario_creador' => $this->usuario_creador,
+            'usuario_modificador' => $this->usuario_modificador,
+            'fecha_creacion' => $this->fecha_creacion,
+            'fecha_modificacion' => $this->fecha_modificacion,
+            'estatus' => true,
         ]);
 
-        $query->andFilterWhere(['like', 'username', $this->username])
-            ->andFilterWhere(['like', 'names', $this->names])
-            ->andFilterWhere(['like', 'password', $this->password]);
+        $query->andFilterWhere(['like', 'nombre_categoria_incidencia', $this->nombre_categoria_incidencia])
+            ->andFilterWhere(['like', 'ip_log', $this->ip_log]);
 
         return $dataProvider;
     }

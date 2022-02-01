@@ -3,19 +3,18 @@
 namespace app\models;
 
 use Yii;
+use app\components\ObtenerLogSeguridad;
 
 /**
  * This is the model class for table "public.usuario".
  *
  * @property int $id
  * @property string $username
- * @property string $password
  * @property string $names
- * @property string $email
- * @property string $rif
+ * @property string $password
  * @property bool $status
  */
-class Usuario extends \yii\db\ActiveRecord
+class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
     /**
      * {@inheritdoc}
@@ -31,10 +30,15 @@ class Usuario extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'password', 'names', 'email', 'rif'], 'required'],
+            [['username', 'names', 'password'], 'required'],
             [['status'], 'boolean'],
-            [['username', 'password', 'names', 'email'], 'string', 'max' => 255],
-            [['rif'], 'string', 'max' => 10],
+            [['username', 'names', 'password'], 'string', 'max' => 255],
+            //[[''], 'filter', 'filter' => 'mb_strtoupper'],
+            /*[['fecha_creacion'], 'default', 'value' => ObtenerLogSeguridad::cdbexpression()],
+            [['fecha_modificacion'], 'filter', 'filter' => function(){return ObtenerLogSeguridad::cdbexpression();},'when' => function($model){return !$model->isNewRecord;}],
+            [['usuario_creador'], 'default', 'value' => Yii::$app->user->id],
+            [['usuario_modificador'], 'filter', 'filter' => function(){return Yii::$app->user->id;},'when' => function($model){return !$model->isNewRecord;}],
+            [['ip_log'], 'filter', 'filter' => function(){return ObtenerLogSeguridad::getRealIpAddr();}],*/
         ];
     }
 
@@ -44,22 +48,44 @@ class Usuario extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'username' => 'Username',
-            'password' => 'Password',
-            'names' => 'Names',
-            'email' => 'Email',
-            'rif' => 'Rif',
-            'status' => 'Status',
+            'id' => Yii::t('app', 'ID'),
+            'username' => Yii::t('app', 'Username'),
+            'names' => Yii::t('app', 'Names'),
+            'password' => Yii::t('app', 'Password'),
+            'status' => Yii::t('app', 'Status'),
         ];
     }
-
-    /**
-     * {@inheritdoc}
-     * @return UsuarioQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new UsuarioQuery(get_called_class());
+     //Este lo pide pero lo dejamos como null por que no lo usamos por el momento
+    public function getAuthKey() {
+        return null;
+       //return $this->auth_key;
+    }    
+    
+    // interface
+    public function validateAuthKey($authKey) {
+        return $this->getAuthKey() == $authKey;
+    }
+    
+    // interface
+    public static function findIdentityByAccessToken($token, $type = null) {
+        throw new \yii\base\NotSupportedException("'findIdentityByAccessToken' is not implemented");
+    }
+    
+    /* Identity Interface */
+    public function getId(){
+        return $this->id;
+    }
+        
+    public static function findIdentity($id) {
+        return static::findOne(['id' => $id]);
+    }
+    
+   // Utilizamos el mismo nombre de método que definimos como el nombre de usuario
+    public static function findByUserName($username) {
+        return static::findOne(['username' => $username]);
+    }
+    
+    public function validatePassword($password) {
+        return Yii::$app->security->validatePassword($password, $this->password);
     }
 }
