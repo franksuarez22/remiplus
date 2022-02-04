@@ -103,25 +103,37 @@ class IncidenciasController extends Controller
                                 Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
-            }else if($model->load($request->post()) && $model->save()){
-                return [
-                    'forceReload'=>'#crud-datatable-incidencias-pjax',
-                    'title'=> "Incidencias",
-                    'content'=>'<span class="text-success">Datos Guardados</span>',
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Guardar Nuevo',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
-        
-                ];         
-            }else{           
-                return [
-                    'title'=> "Incidencias",
-                    'content'=>$this->renderAjax('create', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
-        
-                ];         
+            }else{ 
+                if($model->load($request->post())){
+                    $uploadedFile = UploadedFile::getInstance($model, 'imagen');
+                    if($uploadedFile){
+                        $model->imagen = $uploadedFile->baseName. '.' . $uploadedFile->extension;
+                    }
+                    if ($model->validate()) {
+                        Yii::$app->params['uploadPath']= Yii::$app->basePath.'/web/uploads/';
+                        $uploadedFile->saveAs(Yii::$app->params['uploadPath'] . $uploadedFile->baseName. '.' . $uploadedFile->extension);
+                        if($model->save()){
+                            return [
+                                'forceReload'=>'#crud-datatable-incidencias-pjax',
+                                'title'=> "Incidencias",
+                                'content'=>'<span class="text-success">Datos Guardados</span>',
+                                'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                        Html::a('Guardar Nuevo',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                    
+                            ]; 
+                        }              
+                    }
+          
+                    return [
+                        'title'=> "Incidencias",
+                        'content'=>$this->renderAjax('create', [
+                            'model' => $model,
+                        ]),
+                        'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                    Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
+            
+                    ];         
+                }
             }
         }else{
             /*
@@ -176,37 +188,68 @@ class IncidenciasController extends Controller
                     'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                                 Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
                 ];         
-            }else if($model->load($request->post()) && $model->save()){
-                return [
-                    'forceReload'=>'#crud-datatable-incidencias-pjax',
-                    'title'=> "Incidencias #".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-            }else{
-                 return [
-                    'title'=> "Editar Incidencias #".$id,
-                    'content'=>$this->renderAjax('update', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
-                ];        
+            }else{ 
+                if ($model->load($request->post())) {
+                    $uploadedFile = UploadedFile::getInstance($model, 'imagen');
+                    if($uploadedFile){
+                        $model->imagen = $uploadedFile->baseName. '.' . $uploadedFile->extension;
+                    }elseif(!empty($_POST["imgUpdate"])){
+                        $model->imagen = $_POST["imgUpdate"];
+                    }
+                    if ($model->validate()) {
+                        if(isset($_FILES["Incidencias"]["name"]["imagen"]) && !empty($_FILES["Incidencias"]["name"]["imagen"])){
+                            Yii::$app->params['uploadPath']= Yii::$app->basePath.'/web/uploads/';
+                            $uploadedFile->saveAs(Yii::$app->params['uploadPath'] . $uploadedFile->baseName. '.' . $uploadedFile->extension);
+                        }
+                        if($model->save()){
+                            return [
+                                'forceReload'=>'#crud-datatable-incidencias-pjax',
+                                'title'=> "Incidencias #".$id,
+                                'content'=>$this->renderAjax('view', [
+                                    'model' => $model,
+                                ]),
+                                'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                        Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                            ]; 
+                        }              
+                    }
+                     return [
+                        'title'=> "Editar Incidencias #".$id,
+                        'content'=>$this->renderAjax('update', [
+                            'model' => $model,
+                        ]),
+                        'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                    Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
+                    ]; 
+                }
             }
         }else{
             /*
             *   Process for non-ajax request
             */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id_incidencia]);
-            } else {
+            if ($model->load($request->post())) {
+                $uploadedFile = UploadedFile::getInstance($model, 'imagen');
+                if($uploadedFile){
+                    $model->imagen = $uploadedFile->baseName. '.' . $uploadedFile->extension;
+                }elseif(!empty($_POST["imgUpdate"])){
+                    $model->imagen = $_POST["imgUpdate"];
+                }
+                if ($model->validate()) {
+                    if(isset($_FILES["Incidencias"]["name"]["imagen"]) && !empty($_FILES["Incidencias"]["name"]["imagen"])){
+                        Yii::$app->params['uploadPath']= Yii::$app->basePath.'/web/uploads/';
+                        $uploadedFile->saveAs(Yii::$app->params['uploadPath'] . $uploadedFile->baseName. '.' . $uploadedFile->extension);
+                    }
+                    if($model->save()){
+                        return $this->redirect(['view', 'id' => $model->id_incidencia]);
+                    }              
+                }
                 return $this->render('update', [
                     'model' => $model,
                 ]);
             }
+            return $this->render('update', [
+                'model' => $model,
+            ]);
         }
     }
 

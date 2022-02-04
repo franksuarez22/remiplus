@@ -7,11 +7,15 @@ use kartik\depdrop\DepDrop;
 use kartik\select2\Select2;
 use kartik\file\FileInput;
 use app\assets\MapAsset;
-/* @var $this yii\web\View */
+use  yii\web\View; 
 /* @var $model app\models\Incidencias */
 /* @var $form yii\bootstrap4\ActiveForm */
 
 MapAsset::register($this);
+
+$this->registerJs(
+    "initMap();", View::POS_READY,  'cargaMapa'
+);
 ?>
 
 <div class="incidencias-form">
@@ -149,6 +153,7 @@ MapAsset::register($this);
             if(!$model->isNewRecord && !empty($model->imagen)){
                 $path=Url::to('/uploads/'.$model->imagen, true);
                 $initialPreview = Html::img($path,['class' => 'file-preview-image']);
+                echo Html::hiddenInput('imgUpdate', $model->imagen);
             } 
 
             echo $form->field($model, 'imagen')->widget(FileInput::classname(), [
@@ -156,7 +161,7 @@ MapAsset::register($this);
                 'pluginOptions' => [
                     'showPreview' => true,
                     'showCaption' => false,
-                    'showRemove' => true,
+                    'showRemove' => false,
                     'showUpload' => false,
                     'browseClass' => 'btn btn-primary',
                     'uploadClass' => 'btn btn-info',

@@ -31,7 +31,7 @@ AppAsset::register($this);
 
 if (Yii::$app->user->isGuest) {
     $menuItems = [['label' => 'Contáctanos', 'url' => ['/site/contact']],
-        ['label' => 'Ingresar', 'url' => ['/site/login']],
+        ['label' => 'Ingresar', 'url' => ['/admin/user/login']],
         ['label' => 'Registrarse', 'url' => ['/site/signup']]];
 } else {
     $menu = [['label' => 'Inicio', 'url' => ['/site/index']],

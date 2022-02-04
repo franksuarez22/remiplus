@@ -20,7 +20,7 @@ CrudAsset::register($this);
 $nuevo=$exportar='';
     if(Helper::checkRoute('create')){
        $nuevo = Html::a('Nueva Incidencia <i class="glyphicon glyphicon-plus"></i>', ['/incidencias/create'],
-                ['data-pjax' => 0, /*'role'=>'modal-remote',*/'title'=> 'Nueva Incidencia','class'=>'btn btn-primary']);
+                ['data-pjax' => 1, 'role'=>'modal-remote', 'title'=> 'Nueva Incidencia','class'=>'btn btn-primary']);
     }
 
     if(Helper::checkRoute('gridview/export/download')){
