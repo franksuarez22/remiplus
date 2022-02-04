@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
 use mdm\admin\components\Helper;
+use yii\web\UploadedFile;
 /**
  * IncidenciasController implements the CRUD actions for Incidencias model.
  */
@@ -126,13 +127,25 @@ class IncidenciasController extends Controller
             /*
             *   Process for non-ajax request
             */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id_incidencia]);
-            } else {
+            if ($model->load($request->post())) {
+                $uploadedFile = UploadedFile::getInstance($model, 'imagen');
+                if($uploadedFile){
+                    $model->imagen = $uploadedFile->baseName. '.' . $uploadedFile->extension;
+                }
+                if ($model->validate()) {
+                    Yii::$app->params['uploadPath']= Yii::$app->basePath.'/web/uploads/';
+                    $uploadedFile->saveAs(Yii::$app->params['uploadPath'] . $uploadedFile->baseName. '.' . $uploadedFile->extension);
+                    if($model->save()){
+                        return $this->redirect(['view', 'id' => $model->id_incidencia]);
+                    }              
+                }
                 return $this->render('create', [
                     'model' => $model,
                 ]);
             }
+            return $this->render('create', [
+                'model' => $model,
+            ]);
         }
        
     }

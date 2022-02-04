@@ -10,6 +10,8 @@ use app\components\ObtenerLogSeguridad;
  *
  * @property int $id_incidencia N°
  * @property int $id_tipo_incidencia Tipo de Incidencia
+ * @property int $id_estado Estado
+ * @property int $id_municipio Municipio
  * @property int $id_parroquia Parroquia
  * @property int $id_ciudad Ciudad
  * @property string $descripcion Descripción de la incidencia
@@ -41,14 +43,14 @@ class Incidencias extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_tipo_incidencia', 'id_parroquia', 'id_ciudad', 'descripcion', 'direccion', 'latitud', 'longitud'], 'required'],
-            [['id_tipo_incidencia', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador'], 'default', 'value' => null],
-            [['id_tipo_incidencia', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador'], 'integer'],
+            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'descripcion', 'direccion', 'latitud', 'longitud'], 'required'],
+            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador'], 'default', 'value' => null],
+            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador'], 'integer'],
             [['descripcion', 'direccion', 'ip_log'], 'string'],
             [['latitud', 'longitud'], 'number'],
-            [['fecha_creacion', 'fecha_modificacion'], 'safe'],
+            [['fecha_creacion', 'fecha_modificacion', 'imagen'], 'safe'],
             [['estatus'], 'boolean'],
-            [['punto_referencia', 'imagen'], 'string', 'max' => 250],
+            [['punto_referencia'], 'string', 'max' => 250],
             //[[''], 'filter', 'filter' => 'mb_strtoupper'],
             [['fecha_creacion'], 'default', 'value' => ObtenerLogSeguridad::cdbexpression()],
             [['fecha_modificacion'], 'filter', 'filter' => function(){return ObtenerLogSeguridad::cdbexpression();},'when' => function($model){return !$model->isNewRecord;}],
@@ -74,8 +76,8 @@ class Incidencias extends \yii\db\ActiveRecord
             'id_parroquia' => Yii::t('app', 'Parroquia'),
             'id_ciudad' => Yii::t('app', 'Ciudad'),
             'descripcion' => Yii::t('app', 'Breve descripción'),
-            'direccion' => Yii::t('app', 'Direccion'),
-            'punto_referencia' => Yii::t('app', 'Punto Referencia'),
+            'direccion' => Yii::t('app', 'Dirección'),
+            'punto_referencia' => Yii::t('app', 'Punto de referencia'),
             'latitud' => Yii::t('app', 'Latitud'),
             'longitud' => Yii::t('app', 'Longitud'),
             'imagen' => Yii::t('app', 'Registro fotográfico'),

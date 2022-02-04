@@ -10,6 +10,8 @@ use app\components\ObtenerLogSeguridad;
  *
  * @property int $id_denuncia N°
  * @property int $id_tipo_incidencia Tipo de Incidencia
+ * @property int $id_estado Estado
+ * @property int $id_municipio Municipio
  * @property int $id_parroquia Parroquia
  * @property int $id_ciudad Ciudad
  * @property string $descripcion Descripción de la denuncia
@@ -40,9 +42,9 @@ class Denuncias extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_tipo_incidencia', 'id_parroquia', 'id_ciudad', 'descripcion', 'direccion', 'latitud', 'longitud'], 'required'],
-            [['id_tipo_incidencia', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador'], 'default', 'value' => null],
-            [['id_tipo_incidencia', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador'], 'integer'],
+            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'descripcion', 'direccion', 'latitud', 'longitud'], 'required'],
+            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador'], 'default', 'value' => null],
+            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador'], 'integer'],
             [['descripcion', 'direccion', 'ip_log'], 'string'],
             [['latitud', 'longitud'], 'number'],
             [['fecha_creacion', 'fecha_modificacion'], 'safe'],
@@ -55,6 +57,8 @@ class Denuncias extends \yii\db\ActiveRecord
             [['usuario_modificador'], 'filter', 'filter' => function(){return Yii::$app->user->id;},'when' => function($model){return !$model->isNewRecord;}],
             [['ip_log'], 'filter', 'filter' => function(){return ObtenerLogSeguridad::getRealIpAddr();}],
             [['id_ciudad'], 'exist', 'skipOnError' => true, 'targetClass' => Ciudades::className(), 'targetAttribute' => ['id_ciudad' => 'id_ciudad']],
+            [['id_estado'], 'exist', 'skipOnError' => true, 'targetClass' => Estados::className(), 'targetAttribute' => ['id_estado' => 'id_estado']],
+            [['id_municipio'], 'exist', 'skipOnError' => true, 'targetClass' => Municipios::className(), 'targetAttribute' => ['id_municipio' => 'id_municipio']],
             [['id_parroquia'], 'exist', 'skipOnError' => true, 'targetClass' => Parroquias::className(), 'targetAttribute' => ['id_parroquia' => 'id_parroquia']],
             [['id_tipo_incidencia'], 'exist', 'skipOnError' => true, 'targetClass' => Tipoincidencia::className(), 'targetAttribute' => ['id_tipo_incidencia' => 'id_tipo_incidencia']],
         ];
@@ -67,11 +71,13 @@ class Denuncias extends \yii\db\ActiveRecord
     {
         return [
             'id_denuncia' => Yii::t('app', 'Denuncia'),
-            'id_tipo_incidencia' => Yii::t('app', 'Tipo de Incidencia'),
+            'id_tipo_incidencia' => Yii::t('app', 'Tipo Incidencia'),
+            'id_estado' => Yii::t('app', 'Estado'),
+            'id_municipio' => Yii::t('app', 'Municipio'),
             'id_parroquia' => Yii::t('app', 'Parroquia'),
             'id_ciudad' => Yii::t('app', 'Ciudad'),
-            'descripcion' => Yii::t('app', 'Descripcion'),
-            'direccion' => Yii::t('app', 'Direccion'),
+            'descripcion' => Yii::t('app', 'Descripción'),
+            'direccion' => Yii::t('app', 'Dirección'),
             'punto_referencia' => Yii::t('app', 'Punto Referencia'),
             'latitud' => Yii::t('app', 'Latitud'),
             'longitud' => Yii::t('app', 'Longitud'),

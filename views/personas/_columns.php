@@ -26,20 +26,28 @@ return [
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'id_estado',
+    ],
+    [
+        'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'id_municipio',
+    ],
+    [
+        'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_parroquia',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_ciudad',
     ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'cedula',
-    ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'primer_nombre',
-    ],
+    // [
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'cedula',
+    // ],
+    // [
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'primer_nombre',
+    // ],
     // [
         // 'class'=>'\kartik\grid\DataColumn',
         // 'attribute'=>'segundo_nombre',

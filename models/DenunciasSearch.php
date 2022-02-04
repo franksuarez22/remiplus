@@ -18,7 +18,7 @@ class DenunciasSearch extends Denuncias
     public function rules()
     {
         return [
-            [['id_denuncia', 'id_tipo_incidencia', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador'], 'integer'],
+            [['id_denuncia', 'id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador'], 'integer'],
             [['descripcion', 'direccion', 'punto_referencia', 'ip_log', 'fecha_creacion', 'fecha_modificacion'], 'safe'],
             [['latitud', 'longitud'], 'number'],
             [['estatus'], 'boolean'],
@@ -60,6 +60,8 @@ class DenunciasSearch extends Denuncias
         $query->andFilterWhere([
             'id_denuncia' => $this->id_denuncia,
             'id_tipo_incidencia' => $this->id_tipo_incidencia,
+            'id_estado' => $this->id_estado,
+            'id_municipio' => $this->id_municipio,
             'id_parroquia' => $this->id_parroquia,
             'id_ciudad' => $this->id_ciudad,
             'latitud' => $this->latitud,

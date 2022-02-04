@@ -9,6 +9,7 @@ use yii\bootstrap4\Breadcrumbs;
 use yii\bootstrap4\Html;
 use yii\bootstrap4\Nav;
 use yii\bootstrap4\NavBar;
+use mdm\admin\components\MenuHelper;
 
 AppAsset::register($this);
 ?>
@@ -27,6 +28,26 @@ AppAsset::register($this);
 
 <header>
     <?php
+
+if (Yii::$app->user->isGuest) {
+    $menuItems = [['label' => 'Contáctanos', 'url' => ['/site/contact']],
+        ['label' => 'Ingresar', 'url' => ['/site/login']],
+        ['label' => 'Registrarse', 'url' => ['/site/signup']]];
+} else {
+    $menu = [['label' => 'Inicio', 'url' => ['/site/index']],
+        ['label' => 'Contáctanos', 'url' => ['/site/contact']]];
+    $logout = [[
+        'label' => 'Salir (' . Yii::$app->user->identity->username . ')',
+        'url' => ['/site/logout'],
+        'linkOptions' => ['data-method' => 'post']
+    ]];
+    if (!empty(MenuHelper::getAssignedMenu(Yii::$app->user->id,null,null,true))) {
+        $menuItems = array_merge($menu, MenuHelper::getAssignedMenu(Yii::$app->user->id,null,null,true),$logout);
+    }else{
+        $menuItems = array_merge($menu,$logout);
+    }
+}
+
     NavBar::begin([
         'brandLabel' => Yii::$app->name,
         'brandUrl' => Yii::$app->homeUrl,
@@ -36,23 +57,7 @@ AppAsset::register($this);
     ]);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post', ['class' => 'form-inline'])
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
+        'items' => $menuItems,
     ]);
     NavBar::end();
     ?>

@@ -11,16 +11,16 @@ use mdm\admin\components\Helper;
 /* @var $searchModel app\models\IncidenciasSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Registro de Denuncias');
-$this->title = Yii::t('app', 'Incidencias');
+$this->title = Yii::t('app', 'Registro de Incidencias');
+//$this->title = Yii::t('app', 'Incidencias');
 $this->params['breadcrumbs'][] = $this->title;
 
 CrudAsset::register($this);
 
 $nuevo=$exportar='';
     if(Helper::checkRoute('create')){
-       $nuevo = Html::a('<i class="glyphicon glyphicon-plus"></i>', ['/incidencias/create'],
-                ['role'=>'modal-remote','title'=> 'Nuevo Incidencias','class'=>'btn btn-default']);
+       $nuevo = Html::a('Nueva Incidencia <i class="glyphicon glyphicon-plus"></i>', ['/incidencias/create'],
+                ['data-pjax' => 0, /*'role'=>'modal-remote',*/'title'=> 'Nueva Incidencia','class'=>'btn btn-primary']);
     }
 
     if(Helper::checkRoute('gridview/export/download')){

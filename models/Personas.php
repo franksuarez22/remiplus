@@ -11,6 +11,8 @@ use app\components\ObtenerLogSeguridad;
  * @property int $id_persona N°
  * @property int $id_genero Género
  * @property int $id_nacionalidad Nacionalidad
+ * @property int $id_estado Estado de recidencia
+ * @property int $id_municipio Municipio de recidencia
  * @property int $id_parroquia Parroquia de recidencia
  * @property int $id_ciudad Ciudad de recidencia
  * @property int $cedula Cédula
@@ -44,9 +46,9 @@ class Personas extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_genero', 'id_nacionalidad', 'id_parroquia', 'id_ciudad', 'cedula', 'primer_nombre', 'primer_apellido', 'telefono_contacto', 'correo_electronico'], 'required'],
-            [['id_genero', 'id_nacionalidad', 'id_parroquia', 'id_ciudad', 'cedula', 'usuario_creador', 'usuario_modificador'], 'default', 'value' => null],
-            [['id_genero', 'id_nacionalidad', 'id_parroquia', 'id_ciudad', 'cedula', 'usuario_creador', 'usuario_modificador'], 'integer'],
+            [['id_genero', 'id_nacionalidad', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'cedula', 'primer_nombre', 'primer_apellido', 'telefono_contacto', 'correo_electronico'], 'required'],
+            [['id_genero', 'id_nacionalidad', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'cedula', 'usuario_creador', 'usuario_modificador'], 'default', 'value' => null],
+            [['id_genero', 'id_nacionalidad', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'cedula', 'usuario_creador', 'usuario_modificador'], 'integer'],
             [['fecha_nacimiento', 'fecha_creacion', 'fecha_modificacion'], 'safe'],
             [['ip_log'], 'string'],
             [['estatus'], 'boolean'],
@@ -71,12 +73,14 @@ class Personas extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_persona' => Yii::t('app', 'Id Persona'),
-            'id_genero' => Yii::t('app', 'Id Genero'),
-            'id_nacionalidad' => Yii::t('app', 'Id Nacionalidad'),
-            'id_parroquia' => Yii::t('app', 'Id Parroquia'),
-            'id_ciudad' => Yii::t('app', 'Id Ciudad'),
-            'cedula' => Yii::t('app', 'Cedula'),
+            'id_persona' => Yii::t('app', 'Persona'),
+            'id_genero' => Yii::t('app', 'Genero'),
+            'id_nacionalidad' => Yii::t('app', 'Nacionalidad'),
+            'id_estado' => Yii::t('app', 'Estado'),
+            'id_municipio' => Yii::t('app', 'Municipio'),
+            'id_parroquia' => Yii::t('app', 'Parroquia'),
+            'id_ciudad' => Yii::t('app', 'Ciudad'),
+            'cedula' => Yii::t('app', 'Cédula'),
             'primer_nombre' => Yii::t('app', 'Primer Nombre'),
             'segundo_nombre' => Yii::t('app', 'Segundo Nombre'),
             'primer_apellido' => Yii::t('app', 'Primer Apellido'),

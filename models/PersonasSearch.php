@@ -18,7 +18,7 @@ class PersonasSearch extends Personas
     public function rules()
     {
         return [
-            [['id_persona', 'id_genero', 'id_nacionalidad', 'id_parroquia', 'id_ciudad', 'cedula', 'usuario_creador', 'usuario_modificador'], 'integer'],
+            [['id_persona', 'id_genero', 'id_nacionalidad', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'cedula', 'usuario_creador', 'usuario_modificador'], 'integer'],
             [['primer_nombre', 'segundo_nombre', 'primer_apellido', 'segundo_apellido', 'fecha_nacimiento', 'telefono_contacto', 'correo_electronico', 'ip_log', 'fecha_creacion', 'fecha_modificacion'], 'safe'],
             [['estatus'], 'boolean'],
         ];
@@ -60,6 +60,8 @@ class PersonasSearch extends Personas
             'id_persona' => $this->id_persona,
             'id_genero' => $this->id_genero,
             'id_nacionalidad' => $this->id_nacionalidad,
+            'id_estado' => $this->id_estado,
+            'id_municipio' => $this->id_municipio,
             'id_parroquia' => $this->id_parroquia,
             'id_ciudad' => $this->id_ciudad,
             'cedula' => $this->cedula,

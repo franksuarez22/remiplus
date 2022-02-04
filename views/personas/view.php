@@ -13,6 +13,8 @@ use yii\widgets\DetailView;
             'id_persona',
             'id_genero',
             'id_nacionalidad',
+            'id_estado',
+            'id_municipio',
             'id_parroquia',
             'id_ciudad',
             'cedula',

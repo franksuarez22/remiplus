@@ -22,6 +22,14 @@ return [
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'id_estado',
+    ],
+    [
+        'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'id_municipio',
+    ],
+    [
+        'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_parroquia',
     ],
     [
@@ -32,14 +40,14 @@ return [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'descripcion',
     ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'direccion',
-    ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'punto_referencia',
-    ],
+    // [
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'direccion',
+    // ],
+    // [
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'punto_referencia',
+    // ],
     // [
         // 'class'=>'\kartik\grid\DataColumn',
         // 'attribute'=>'latitud',

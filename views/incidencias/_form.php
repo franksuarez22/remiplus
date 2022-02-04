@@ -5,6 +5,7 @@ use yii\bootstrap4\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\depdrop\DepDrop;
 use kartik\select2\Select2;
+use kartik\file\FileInput;
 use app\assets\MapAsset;
 /* @var $this yii\web\View */
 /* @var $model app\models\Incidencias */
@@ -17,13 +18,14 @@ MapAsset::register($this);
 
     <?php $form = ActiveForm::begin([
             'enableAjaxValidation' => false,
-            'enableClientValidation' => true,
+            'enableClientValidation' => false,
             'options' => [
                 'enctype' => 'multipart/form-data'       
             ]
         ]); ?>
-     <h3><div align="left">Registro de incidencias</div></h3>
-    <div class="form-row">
+    <h3>Registro de incidencias</h3><br>
+    <h4>Ubicación</h4><br>
+<div class="form-row">
     <div class='col-md-6'>
             <?php 
                 $estados = app\models\Estados::find(['estatus' => true])->all();
@@ -85,7 +87,7 @@ MapAsset::register($this);
         <?php 
             if(!empty($model->id_parroquia)){
                 $Ciudades = app\models\Ciudades::find()->where(['id_parroquia' => $model->id_parroquia, 'estatus' => true])->all();
-                $listaCiudades = ArrayHelper::map($Ciudades,'id_ciudad','descripcion');
+                $listaCiudades = ArrayHelper::map($Ciudades,'id_ciudad','ciudad');
             }else{
                 $listaCiudades = [];
                 $model->id_ciudad = '';
@@ -103,13 +105,24 @@ MapAsset::register($this);
             ]);         
         ?>
     </div>
-    <div class='col-md-12'>
-        <?= $form->field($model, 'descripcion')->textarea(['rows' => 6]) ?>
+    <div class='col-md-6'>
+        <?= $form->field($model, 'latitud')->hiddenInput(['id' => 'latitud'])->label(false) ?>
+        <?= $form->field($model, 'longitud')->hiddenInput(['id' => 'longitud'])->label(false) ?>
     </div>
-        <h3><div align="center">Detalle de incidencias</div></h3>
-        <div class='col-md-6'>
-        </div>
-        <div class='col-md-6'><br>
+    <div class='col-md-12'>
+        <div id="map"></div>
+    </div><br><br>  
+    <div class='col-md-12'>
+        <?= $form->field($model, 'direccion')->textarea(['rows' => 6, 'id' => 'direccion']) ?>
+    </div>
+    <div class='col-md-12'>
+        <?= $form->field($model, 'punto_referencia')->textInput(['maxlength' => true]) ?>
+    </div>
+</div>   
+<br> 
+<h3>Detalle de incidencias</h3>
+<div class="form-row">
+    <div class='col-md-6'><br>
         <?php 
             $tipo_incidencia = app\models\Tipoincidencia::find(['estatus' => true])->all();
             $lista_tipo_incidencia = ArrayHelper::map($tipo_incidencia,'id_tipo_incidencia','nombre_tipo_incidencia');
@@ -126,21 +139,35 @@ MapAsset::register($this);
             ]);
         ?>
     </div>
-    <div class='col-md-6'>
-        <?= $form->field($model, 'latitud')->hiddenInput()->label(false) ?>
-        <?= $form->field($model, 'longitud')->hiddenInput()->label(false) ?>
+    <div class='col-md-12'>
+        <?= $form->field($model, 'descripcion')->textarea(['rows' => 3]) ?>
     </div>
     <div class='col-md-12'>
-        <div id="map"></div>
-    </div><br><br>  
-    <div class='col-md-12'>
-        <?= $form->field($model, 'direccion')->textarea(['rows' => 6]) ?>
-    </div>
-    <div class='col-md-12'>
-        <?= $form->field($model, 'punto_referencia')->textInput(['maxlength' => true]) ?>
-    </div>
-    <div class='col-md-12'>
-        <?= $form->field($model, 'imagen')->textInput(['maxlength' => true]) ?>
+        <?php //echo $form->field($model, 'imagen')->fileInput();?>
+        <?php
+            $initialPreview = "";
+            if(!$model->isNewRecord && !empty($model->imagen)){
+                $path=Url::to('/uploads/'.$model->imagen, true);
+                $initialPreview = Html::img($path,['class' => 'file-preview-image']);
+            } 
+
+            echo $form->field($model, 'imagen')->widget(FileInput::classname(), [
+                'options' => ['multiple' => false, 'accept' => 'image/*'],
+                'pluginOptions' => [
+                    'showPreview' => true,
+                    'showCaption' => false,
+                    'showRemove' => true,
+                    'showUpload' => false,
+                    'browseClass' => 'btn btn-primary',
+                    'uploadClass' => 'btn btn-info',
+                    'removeClass' => 'btn btn-danger',
+                    'removeIcon' => '<i class="fas fa-trash"></i>',
+                    'maxFileCount' => 3,
+                    'browseIcon' => '<i class="fas fa-camera"></i> ',
+                    'initialPreview' => $initialPreview
+                ]
+            ]);
+        ?>
     </div>
     <?php /**/if(!$model->isNewRecord){/**/ ?>
         <div class='col-md-4'>
@@ -148,6 +175,7 @@ MapAsset::register($this);
         </div>
     <?php } ?>  
 </div>    
+<br>
 	<?php if (!Yii::$app->request->isAjax){ ?>
 	  	<div class="form-group">
 	        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Guardar') : Yii::t('app', 'Editar'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

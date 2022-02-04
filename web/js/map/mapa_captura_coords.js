@@ -50,6 +50,7 @@ const mapOptions = {
   center: [8.118513, -66.213671],
   zoom: 6,
   layers: [basemaps.OpenStreetMaps],
+  scrollWheelZoom: false,
   //visualClick: true
 };
 
@@ -78,14 +79,13 @@ map.flyTo([8.118513, -66.213671], 6, {
 L.easyButton( '<span class="fas fa-home"></span>', volverInicio).addTo(map);
 
 let grupo_marcadores_ubicaciones = L.layerGroup().addTo(map);
+var inputlat = document.getElementById("latitud");
+var inputlng = document.getElementById("longitud");
+var inputdireccion = document.getElementById("direccion");
 let crearMarcador = (e) => {
     grupo_marcadores_ubicaciones.clearLayers();
     markerIncidencia = new L.marker(e.latlng, {}).addTo(grupo_marcadores_ubicaciones).addTo(map);
     //markerIncidencia.bindPopup("<b>Coodenadas:</b> "+e.latlng + " Latitud: " +e.latlng.lat + ", Longitud: " + e.latlng.lng).openPopup(); 
-
-    var inputlat = document.getElementById("incidencias-latitud");
-    var inputlng = document.getElementById("incidencias-longitud");
-    var inputdireccion = document.getElementById("incidencias-direccion");
     inputlat.value=e.latlng.lat;
     inputlng.value=e.latlng.lng;
 

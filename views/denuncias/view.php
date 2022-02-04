@@ -12,6 +12,8 @@ use yii\widgets\DetailView;
         'attributes' => [
             'id_denuncia',
             'id_tipo_incidencia',
+            'id_estado',
+            'id_municipio',
             'id_parroquia',
             'id_ciudad',
             'descripcion:ntext',
