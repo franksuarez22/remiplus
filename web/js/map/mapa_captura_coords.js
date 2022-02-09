@@ -111,6 +111,8 @@ function initMap() {
 
   if(inputlat.value!="" && inputlng.value!=""){
     var marker = new L.marker([parseFloat(inputlat.value), parseFloat(inputlng.value)]).addTo(grupo_marcadores_ubicaciones).addTo(map);
+    map.panTo(new L.LatLng(parseFloat(inputlat.value), parseFloat(inputlng.value)));
+    map.setZoom(11);
   }
 
   setTimeout(function() {

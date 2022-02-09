@@ -48,6 +48,17 @@ class IncidenciasController extends Controller
         ]);
     }
 
+    public function actionIndexdenunciante()
+    {    
+        $searchModel = new IncidenciasSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index_denunciante', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
 
     /**
      * Displays a single Incidencias model.

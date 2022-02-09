@@ -83,7 +83,7 @@ return [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
         'vAlign'=>'middle',
-        'template' => Helper::filterActionColumn('{view} {update} {delete}'),
+        'template' => '{view} {update} ',//{delete}',
         'urlCreator' => function($action, $model, $key, $index) { 
                 return Url::to(['/incidencias/'.$action,'id'=>$key]);
         },

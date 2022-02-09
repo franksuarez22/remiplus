@@ -8,7 +8,9 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
+use app\models\LoginFormDenunciante;
 use app\models\ContactForm;
+use app\components\ComplementFunctions as cf;
 
 class SiteController extends Controller
 {
@@ -124,5 +126,63 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    /**
+     * Login action para denunciante.
+     *
+     * @return Response|string
+     */
+    public function actionLogindenunciante()
+    {
+        extract($_POST);
+        extract($_GET);
+        //cf::iam($_POST,true);
+        $input_token = $rtoken = $token = false;
+        $model = new LoginFormDenunciante();
+        $model->scenario = 'verifytoken';  
+         
+        if ($model->load(Yii::$app->request->post())) { 
+            //$model->scenario = 'verifytoken';
+            //cf::iam($model,true);      
+            if(isset($model->token)){
+                $tokenValido = cf::tokenValido($model); 
+                //cf::iam([$Tokensesion, $model],true);
+                if($tokenValido["valido"]==true){
+                    //Crear sesión
+                    $session = Yii::$app->session;
+                    $session['id_nacionalidad'] = $model->id_nacionalidad;
+                    $session['cedula'] = $model->cedula;
+                    $session['telefono'] = $model->telefono;
+                    $session['correo'] = $model->correo;
+                    //busco datos en personas
+                    $personas = \app\models\Personas::findOne([
+                        'cedula' => $model->cedula, 
+                        'estatus' => true
+                    ]);
+                    if(!isset($personas) && empty($personas) && is_null($personas)){
+                        return $this->redirect(['/personas/create']);
+                    }    
+                    //Buscar datos en los web services
+                    //Si consigo datos redireccionar a incidencias si no a personas
+                    //Aqui debo iniciar sesión
+                    return $this->redirect(['/incidencias/indexdenunciante']);
+                }  
+                $input_token = true;
+                $rtoken = $tokenValido["vencido"];
+                $model->addError('token', $tokenValido["mensaje"]);
+            }else{             
+                if($model->validate(['id_nacionalidad','cedula', 'telefono', 'correo'])){
+                    $input_token = true;
+                    $token = cf::enviarToken($model);
+                }
+            }     
+        }
+        return $this->render('login_denunciante', [
+            'model' => $model,
+            'input_token' => $input_token,
+            'rtoken' => $rtoken,
+            'token' => $token,
+        ]);
     }
 }

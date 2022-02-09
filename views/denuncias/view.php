@@ -11,11 +11,26 @@ use yii\widgets\DetailView;
         'model' => $model,
         'attributes' => [
             'id_denuncia',
-            'id_tipo_incidencia',
-            'id_estado',
-            'id_municipio',
-            'id_parroquia',
-            'id_ciudad',
+            [
+            'attribute'=>'id_tipo_incidencia',
+            'value'=>$model->tipoincidencia->nombre_tipo_incidencia           
+            ],
+            [
+            'attribute'=>'id_estado',
+            'value'=>$model->estado->estado
+            ],
+            [
+            'attribute'=>'id_municipio',
+            'value'=>$model->municipio->municipio
+            ], 
+            [
+               'attribute'=>'id_parroquia',
+               'value'=>$model->parroquia->parroquia
+            ],
+            [
+               'attribute'=>'id_ciudad',
+               'value'=>$model->ciudad->ciudad
+            ],
             'descripcion:ntext',
             'direccion:ntext',
             'punto_referencia',

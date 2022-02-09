@@ -6,12 +6,16 @@ use yii\helpers\ArrayHelper;
 use kartik\depdrop\DepDrop;
 use kartik\select2\Select2;
 use app\assets\MapAsset;
-
+use  yii\web\View; 
 /* @var $this yii\web\View */
 /* @var $model app\models\Denuncias */
 /* @var $form yii\bootstrap4\ActiveForm */
 
 MapAsset::register($this);
+
+$this->registerJs(
+    "initMap();", View::POS_READY,  'cargaMapa'
+);
 ?>
 
 <div class="denuncias-form">

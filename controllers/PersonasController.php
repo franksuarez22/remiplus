@@ -126,8 +126,28 @@ class PersonasController extends Controller
             /*
             *   Process for non-ajax request
             */
+            $session = Yii::$app->session;
+
+            // comprueba si una sesión está ya abierta
+            if ($session->isActive){
+                $model->telefono_contacto=$session['telefono'];
+                $model->correo_electronico=$session['correo'];
+                $persona = \app\models\Persona::find()->where(['cedula' => $session['cedula']])->one();
+                if (isset($persona) && !empty($persona)) {
+                    $model->id_nacionalidad=isset($persona->nacionalidad)&&$persona->nacionalidad=="VEN"?1:2;
+                    $model->cedula=$persona->cedula;
+                    $model->primer_nombre=$persona->primer_nombre;
+                    $model->segundo_nombre=$persona->segundo_nombre;
+                    $model->primer_apellido=$persona->primer_apellido;
+                    $model->segundo_apellido=$persona->segundo_apellido;
+                    $model->id_genero=isset($persona->sexo)&&$persona->sexo=="F"?1:2;
+                    $model->fecha_nacimiento=$persona->fecha_nacimiento;
+                }
+            }
+            //buscar en SAIME o web services
             if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id_persona]);
+                //return $this->redirect(['view', 'id' => $model->id_persona]);
+                return $this->redirect(['/incidencias/indexdenunciante', 'idp' => $model->id_persona]);
             } else {
                 return $this->render('create', [
                     'model' => $model,

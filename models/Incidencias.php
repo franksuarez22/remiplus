@@ -54,7 +54,7 @@ class Incidencias extends \yii\db\ActiveRecord
             //[[''], 'filter', 'filter' => 'mb_strtoupper'],
             [['fecha_creacion'], 'default', 'value' => ObtenerLogSeguridad::cdbexpression()],
             [['fecha_modificacion'], 'filter', 'filter' => function(){return ObtenerLogSeguridad::cdbexpression();},'when' => function($model){return !$model->isNewRecord;}],
-            [['usuario_creador'], 'default', 'value' => Yii::$app->user->id],
+            [['usuario_creador'], 'default', 'value' => isset(Yii::$app->user->id)? Yii::$app->user->id: 1],
             [['usuario_modificador'], 'filter', 'filter' => function(){return Yii::$app->user->id;},'when' => function($model){return !$model->isNewRecord;}],
             [['ip_log'], 'filter', 'filter' => function(){return ObtenerLogSeguridad::getRealIpAddr();}],
             [['id_ciudad'], 'exist', 'skipOnError' => true, 'targetClass' => Ciudades::className(), 'targetAttribute' => ['id_ciudad' => 'id_ciudad']],
@@ -69,7 +69,7 @@ class Incidencias extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_incidencia' => Yii::t('app', 'Id Incidencia'),
+            'id_incidencia' => Yii::t('app', 'Incidencia'),
             'id_tipo_incidencia' => Yii::t('app', 'Tipo de Incidencia'),
             'id_estado' => Yii::t('app', 'Estado'),
             'id_municipio' => Yii::t('app', 'Municipio'),
@@ -89,4 +89,27 @@ class Incidencias extends \yii\db\ActiveRecord
             'estatus' => Yii::t('app', 'Estatus'),
         ];
     }
+       
+   /*Relaciones*/
+    
+    public function getTipoincidencia(){
+        return $this->hasOne(Tipoincidencia::className(),['id_tipo_incidencia' => 'id_tipo_incidencia']);
+    }
+
+    public function getCiudad(){
+        return $this->hasOne(Ciudades::className(),['id_ciudad' => 'id_ciudad']);
+    }
+
+    public function getParroquia(){
+        return $this->hasOne(Parroquias::className(),['id_parroquia' => 'id_parroquia']);
+    }
+
+    public function getMunicipio(){
+        return $this->hasOne(Municipios::className(),['id_municipio' => 'id_municipio']);
+    }
+
+    public function getEstado(){
+        return $this->hasOne(Estados::className(),['id_estado' => 'id_estado']);
+    }
+    
 }

@@ -11,12 +11,30 @@ use yii\widgets\DetailView;
         'model' => $model,
         'attributes' => [
             'id_persona',
-            'id_genero',
-            'id_nacionalidad',
-            'id_estado',
-            'id_municipio',
-            'id_parroquia',
-            'id_ciudad',
+             [
+                'attribute'=>'id_genero',
+                'value'=>$model->genero->descripcion_genero
+            ],
+            [
+                'attribute'=>'id_nacionalidad',
+                'value'=>$model->nacionalidad->descripcion_nacionalidad
+            ],
+            [
+                'attribute'=>'id_estado',
+                'value'=>$model->estado->estado
+            ],
+            [
+                'attribute'=>'id_municipio',
+                'value'=>$model->municipio->municipio
+            ],
+            [
+                'attribute'=>'id_parroquia',
+                'value'=>$model->parroquia->parroquia
+            ],
+            [
+               'attribute'=>'id_ciudad',
+               'value'=>$model->ciudad->ciudad
+           ],
             'cedula',
             'primer_nombre',
             'segundo_nombre',

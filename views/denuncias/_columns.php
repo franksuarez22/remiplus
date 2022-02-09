@@ -19,22 +19,27 @@ return [
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_tipo_incidencia',
+        'value'=>'tipoincidencia.nombre_tipo_incidencia',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_estado',
+        'value'=>'estado.estado',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_municipio',
+        'value'=>'municipio.municipio',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_parroquia',
+        'value'=>'parroquia.parroquia',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_ciudad',
+        'value'=>'ciudad.ciudad'
     ],
     [
         'class'=>'\kartik\grid\DataColumn',

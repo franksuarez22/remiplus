@@ -19,26 +19,32 @@ return [
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_genero',
+        'value'=>'genero.descripcion_genero',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_nacionalidad',
+        'value'=>'nacionalidad.descripcion_nacionalidad',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_estado',
+        'value'=>'estado.estado',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_municipio',
+        'value'=>'municipio.municipio',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_parroquia',
+        'value'=>'parroquia.parroquia',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_ciudad',
+        'value'=>'ciudad.ciudad'
     ],
     // [
         // 'class'=>'\kartik\grid\DataColumn',

@@ -20,7 +20,7 @@ use kartik\date\DatePicker;
                 'enctype' => 'multipart/form-data'       
             ]
         ]); ?>
-<h3><div align="left">Persona Contacto</div></h3>
+<h3><div align="left">Datos básicos</div></h3></br>
 <div class="form-row">
     <div class='col-md-6'>
         <?php 
