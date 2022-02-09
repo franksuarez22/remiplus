@@ -30,7 +30,7 @@ class UsuarioController extends Controller
                     ],
                 ],
             ],
-        ];
+        );
     }
 
     /**
