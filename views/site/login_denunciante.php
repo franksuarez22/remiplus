@@ -10,12 +10,12 @@ use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 
 $this->title = 'Inicio de sesión';
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
+    <!--<h1><?/*= Html::encode($this->title) */?></h1>-->
 
-    <p>Por favor llene los siguientes campos para iniciar sesión:</p>
+    <p>Por favor llene los siguientes campos para iniciar una incidencia:</p>
 
     <?php $form = ActiveForm::begin([
         'enableClientValidation' => true,

@@ -30,10 +30,10 @@ AppAsset::register($this);
     <?php
 
 if (Yii::$app->user->isGuest) {
-    $menuItems = [['label' => 'Contáctanos', 'url' => ['/site/contact']],
-        ['label' => 'Ingresar internos', 'url' => ['/admin/user/login']],
-        ['label' => 'Ingresar denunciante', 'url' => ['/site/logindenunciante']],
-        ['label' => 'Registrarse', 'url' => ['/site/signup']]];
+    $menuItems = [/*['label' => 'Contáctanos', 'url' => ['/site/contact']],*/
+        ['label' => 'Iniciar sesión', 'url' => ['/admin/user/login']],
+        ['label' => 'Ingresar incidencia', 'url' => ['/site/logindenunciante']],
+        /*['label' => 'Registrarse', 'url' => ['/site/signup']]*/];
 } else {
     $menu = [['label' => 'Inicio', 'url' => ['/site/index']],
         ['label' => 'Contáctanos', 'url' => ['/site/contact']]];
@@ -50,7 +50,7 @@ if (Yii::$app->user->isGuest) {
 }
 
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' => 'Inicio',//Yii::$app->name,
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
@@ -76,8 +76,7 @@ if (Yii::$app->user->isGuest) {
 
 <footer class="footer mt-auto py-3 text-muted">
     <div class="container">
-        <p class="float-left">&copy; My Company <?= date('Y') ?></p>
-        <p class="float-right"><?= Yii::powered() ?></p>
+        <p class="float-left">&copy; MINCYT <?= date('Y') ?></p>
     </div>
 </footer>
 

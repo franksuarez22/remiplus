@@ -13,7 +13,7 @@ use mdm\admin\components\Helper;
 
 $this->title = Yii::t('app', 'Registro de Incidencias');
 //$this->title = Yii::t('app', 'Incidencias');
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = $this->title;
 
 CrudAsset::register($this);
 

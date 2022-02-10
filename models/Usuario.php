@@ -49,10 +49,10 @@ class Usuario extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'username' => Yii::t('app', 'Username'),
-            'names' => Yii::t('app', 'Names'),
-            'password' => Yii::t('app', 'Password'),
-            'status' => Yii::t('app', 'Status'),
+            'username' => Yii::t('app', 'Nombre de usuario'),
+            'names' => Yii::t('app', 'Nombre completo'),
+            'password' => Yii::t('app', 'Clave'),
+            'status' => Yii::t('app', 'Estatus'),
         ];
     }
      //Este lo pide pero lo dejamos como null por que no lo usamos por el momento
