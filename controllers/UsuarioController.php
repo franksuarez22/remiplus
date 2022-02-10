@@ -1,7 +1,7 @@
 <?php
 
-namespace app\controllers;
 
+namespace app\controllers;
 
 use app\models\Usuario;
 use app\models\UsuarioSearch;
@@ -16,7 +16,7 @@ use yii;
 class UsuarioController extends Controller
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function behaviors()
     {
@@ -29,7 +29,7 @@ class UsuarioController extends Controller
                         'delete' => ['POST'],
                     ],
                 ],
-            ],
+            ]
         );
     }
 
@@ -38,7 +38,7 @@ class UsuarioController extends Controller
      * @return mixed
      */
     public function actionIndex()
-    {    
+    {
         $searchModel = new UsuarioSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
@@ -48,11 +48,11 @@ class UsuarioController extends Controller
         ]);
     }
 
-
     /**
      * Displays a single Usuario model.
-     * @param integer $id
+     * @param int $id ID
      * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
@@ -86,6 +86,8 @@ class UsuarioController extends Controller
             } else {
                 die('Error al guardar');
             }
+
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
@@ -118,10 +120,10 @@ class UsuarioController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
     {
-        $request = Yii::$app->request;
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -138,8 +140,8 @@ class UsuarioController extends Controller
     {
         if (($model = Usuario::findOne($id)) !== null) {
             return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
         }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
