@@ -59,10 +59,10 @@ class Codigostelefonicos extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_codigos_telefonicos' => Yii::t('app', 'Id Codigos Telefonicos'),
-            'codigo_telefonico' => Yii::t('app', 'Codigo Telefonico'),
-            'tippo_telefonia' => Yii::t('app', 'Tippo Telefonia'),
-            'compania_telefonica' => Yii::t('app', 'Compania Telefonica'),
+            'id_codigos_telefonicos' => Yii::t('app', 'Codigos Telefónicos'),
+            'codigo_telefonico' => Yii::t('app', 'Codigo Telefónico'),
+            'tippo_telefonia' => Yii::t('app', 'Tipo de Telefonía'),
+            'compania_telefonica' => Yii::t('app', 'Compañia Telefónica'),
             'ip_log' => Yii::t('app', 'Ip Log'),
             'usuario_creador' => Yii::t('app', 'Usuario Creador'),
             'usuario_modificador' => Yii::t('app', 'Usuario Modificador'),

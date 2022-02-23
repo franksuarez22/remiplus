@@ -57,8 +57,8 @@ class Ciudades extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_ciudad' => 'Id Ciudad',
-            'id_parroquia' => 'Id Parroquia',
+            'id_ciudad' => 'Ciudad',
+            'id_parroquia' => 'Parroquia',
             'ciudad' => 'Ciudad',
             'ip_log' => 'Ip Log',
             'usuario_creador' => 'Usuario Creador',

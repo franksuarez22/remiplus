@@ -59,8 +59,8 @@ class Configuracion extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_configuracion' => Yii::t('app', 'Id Configuracion'),
-            'vencimiento_token_sesion' => Yii::t('app', 'Vencimiento Token Sesion'),
+            'id_configuracion' => Yii::t('app', 'Configuracion'),
+            'vencimiento_token_sesion' => Yii::t('app', 'Vencimiento del Token Sesion'),
             'vencimiento_sesion_interno' => Yii::t('app', 'Vencimiento Sesion Interno'),
             'vencimiento_sesion_externo' => Yii::t('app', 'Vencimiento Sesion Externo'),
             'cantidad_incidencias_denuncia' => Yii::t('app', 'Cantidad Incidencias Denuncia'),

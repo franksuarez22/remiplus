@@ -1,4 +1,4 @@
-function initMap() {
+function initMapView() {
   //Capas base
   const basemaps = {
     "OpenStreetMaps": L.tileLayer(
@@ -86,31 +86,6 @@ function initMap() {
   var inputlat = document.getElementById("latitud");
   var inputlng = document.getElementById("longitud");
   var inputdireccion = document.getElementById("direccion");
-  let crearMarcador = (e) => {
-      grupo_marcadores_ubicaciones.clearLayers();
-      markerIncidencia = new L.marker(e.latlng, {}).addTo(grupo_marcadores_ubicaciones).addTo(map);
-      //markerIncidencia.bindPopup("<b>Coodenadas:</b> "+e.latlng + " Latitud: " +e.latlng.lat + ", Longitud: " + e.latlng.lng).openPopup(); 
-      inputlat.value=e.latlng.lat;
-      inputlng.value=e.latlng.lng;
-
-      fetch("https://nominatim.openstreetmap.org/reverse?" +
-                "format=json&amp;addressdetails=0&zoom=18&" +
-                "lat=" + e.latlng.lat + "&lon=" + e.latlng.lng )
-      .then(response => response.json())
-      .then(function(response) {
-        //if(response.ok) {
-            inputdireccion.value=response.display_name;
-        //} else {
-          //console.log('Respuesta de red OK pero respuesta HTTP no OK');
-        //}
-      })
-      .catch(function(error) {
-        console.log('Hubo un problema con la petición Fetch:' + error.message);
-      });
-  };
-  map.on('click', crearMarcador);
-
-
 
   if(inputlat.value!="" && inputlng.value!=""){   
     map.flyTo([parseFloat(inputlat.value), parseFloat(inputlng.value)], 11);

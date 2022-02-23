@@ -6,6 +6,8 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Denuncias;
+use mdm\admin\models\User;
+use app\components\ComplementFunctions as cf;
 
 /**
  * DenunciasSearch represents the model behind the search form about `app\models\Denuncias`.
@@ -18,7 +20,7 @@ class DenunciasSearch extends Denuncias
     public function rules()
     {
         return [
-            [['id_denuncia', 'id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador'], 'integer'],
+            [['id_denuncia', 'id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador', 'id_categoria_incidencia'], 'integer'],
             [['descripcion', 'direccion', 'punto_referencia', 'ip_log', 'fecha_creacion', 'fecha_modificacion'], 'safe'],
             [['latitud', 'longitud'], 'number'],
             [['estatus'], 'boolean'],
@@ -44,6 +46,9 @@ class DenunciasSearch extends Denuncias
     public function search($params)
     {
         $query = Denuncias::find();
+        $rol = cf::rolUsuario(Yii::$app->user->getId());
+        $usuario = User::findIdentity(Yii::$app->user->getId());
+        $persona = Personas::findOne(['cedula'=>$usuario->cedula, 'estatus' => true]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -51,6 +56,12 @@ class DenunciasSearch extends Denuncias
 
         $this->load($params);
 
+        if(!in_array('Administrador', $rol)){
+            $this->id_estado=$persona->id_estado;
+            $this->id_municipio=$persona->id_municipio;
+            $this->id_parroquia=$persona->id_parroquia;
+        }
+        
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
@@ -60,6 +71,7 @@ class DenunciasSearch extends Denuncias
         $query->andFilterWhere([
             'id_denuncia' => $this->id_denuncia,
             'id_tipo_incidencia' => $this->id_tipo_incidencia,
+            'id_categoria_incidencia' => $this->id_categoria_incidencia,
             'id_estado' => $this->id_estado,
             'id_municipio' => $this->id_municipio,
             'id_parroquia' => $this->id_parroquia,

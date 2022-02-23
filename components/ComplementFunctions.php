@@ -120,7 +120,7 @@ class ComplementFunctions {
             $newToken->validate();
             
             if($newToken->save(false)){
-                $email = ComplementFunctions::issendEmail($newToken);
+                //$email = ComplementFunctions::issendEmail($newToken);
                 return $newToken->token_sesion;
                 //Envió de token por correo o sms
                

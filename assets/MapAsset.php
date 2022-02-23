@@ -30,7 +30,6 @@ class MapAsset extends AssetBundle
         'js/map/Control.FullScreen.js',
         'js/map/easy-button.js',
         'js/map/leaflet-easyPrint.js',
-        'js/map/mapa_captura_coords.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

@@ -13,8 +13,12 @@ use  yii\web\View;
 
 MapAsset::register($this);
 
+$this->registerJsFile('@web/js/map/mapa_captura_coords.js',[
+    'depends'=>[app\assets\MapAsset::className()]
+]);
+
 $this->registerJs(
-    "initMap();", View::POS_READY,  'cargaMapa'
+    "initMap();", View::POS_READY,  'cargaMapaCapturaCoords'
 );
 ?>
 
@@ -22,12 +26,12 @@ $this->registerJs(
 
     <?php $form = ActiveForm::begin([
             'enableAjaxValidation' => false,
-            'enableClientValidation' => false,
+            'enableClientValidation' => true,
             'options' => [
                 'enctype' => 'multipart/form-data'       
             ]
         ]); ?>
-    <h3>Registro de incidencias</h3><br>
+    <h3>Datos básicos de incidencias</h3><br>
     <h4>Ubicación</h4><br>
 <div class="form-row">
     <div class='col-md-6'>
@@ -35,7 +39,8 @@ $this->registerJs(
                 $estados = app\models\Estados::find(['estatus' => true])->all();
                 $listaestados = ArrayHelper::map($estados,'id_estado','estado');
                 echo $form->field($model, 'id_estado')->widget(Select2::classname(), [
-                    'data' => $listaestados,    
+                    'data' => $listaestados,   
+                    'disabled' => isset($model->id_estado), 
                     'options' => ['placeholder' => 'Seleccione','id'=>'estado'],
                     'pluginOptions' => [
                         'allowClear' => true
@@ -54,6 +59,7 @@ $this->registerJs(
             } 
             echo $form->field($model, 'id_municipio')->widget(DepDrop::classname(), [
                 'data' => $listaMunicipios,
+                'disabled' => isset($model->id_municipio),
                 'type' => DepDrop::TYPE_SELECT2,
                 'options'=>['id_municipio'=>'municipio','id'=>'municipio'],
                 'select2Options' => ['pluginOptions' => ['allowClear' => true]],
@@ -76,6 +82,7 @@ $this->registerJs(
             }  
             echo $form->field($model, 'id_parroquia')->widget(DepDrop::classname(), [
                 'data' => $listaParroquias,
+                'disabled' => isset($model->id_parroquia),
                 'type' => DepDrop::TYPE_SELECT2,
                 'options'=>['id_parroquia'=>'parroquia','id'=>'parroquia'],
                 'select2Options' => ['pluginOptions' => ['allowClear' => true]],
@@ -98,6 +105,7 @@ $this->registerJs(
             }  
             echo $form->field($model, 'id_ciudad')->widget(DepDrop::classname(), [
                 'data' => $listaCiudades,
+                'disabled' => isset($model->id_ciudad),
                 'type' => DepDrop::TYPE_SELECT2,
                 'options'=>['id_ciudad'=>'ciudad','id'=>'ciudad'],
                 'select2Options' => ['pluginOptions' => ['allowClear' => true]],
@@ -124,23 +132,45 @@ $this->registerJs(
     </div>
 </div>   
 <br> 
-<h3>Detalle de incidencias</h3>
+<h3>Detalle de incidencias</h3><br>
 <div class="form-row">
-    <div class='col-md-6'><br>
+    <div class='col-md-6'>
         <?php 
-            $tipo_incidencia = app\models\Tipoincidencia::find(['estatus' => true])->all();
-            $lista_tipo_incidencia = ArrayHelper::map($tipo_incidencia,'id_tipo_incidencia','nombre_tipo_incidencia');
-            echo $form->field($model, 'id_tipo_incidencia')->widget(Select2::classname(), [
-                'data' => $lista_tipo_incidencia,
+            $tipo_categoria = app\models\Categoriaincidencia::find(['estatus' => true])->all();
+            $lista_tipo_categoria = ArrayHelper::map($tipo_categoria,'id_categoria_incidencia','nombre_categoria_incidencia');
+            echo $form->field($model, 'id_categoria_incidencia')->widget(Select2::classname(), [
+                'data' => $lista_tipo_categoria,
                 'options' => [
                     'placeholder' => 'Seleccione...',
-                    'id'=>'tipo_incidencia',
+                    'id'=>'tipo_categoria',
                     'class'=>'select2'
                     ],
                 'pluginOptions' => [
                     'allowClear' => true
                 ],
             ]);
+        ?>
+    </div>
+    <div class='col-md-6'>
+        <?php 
+            if(!empty($model->id_categoria_incidencia)){
+                $tipo_incidencia = app\models\Tipoincidencia::find()->where(['id_categoria_incidencia' => $model->id_categoria_incidencia, 'estatus' => true])->all();
+                $lista_tipo_incidencia = ArrayHelper::map($tipo_incidencia,'id_tipo_incidencia','nombre_tipo_incidencia');
+            }else{
+                $lista_tipo_incidencia = [];
+                $model->id_tipo_incidencia = '';
+            }  
+            echo $form->field($model, 'id_tipo_incidencia')->widget(DepDrop::classname(), [
+                'data' => $lista_tipo_incidencia,
+                'type' => DepDrop::TYPE_SELECT2,
+                'options'=>['id_tipo_incidencia'=>'nombre_tipo_incidencia','id'=>'nombre_tipo_incidencia'],
+                'select2Options' => ['pluginOptions' => ['allowClear' => true]],
+                'pluginOptions'=>[
+                    'depends'=>['tipo_categoria'],
+                    'placeholder'=>'Seleccione',
+                    'url'=>Url::to(['/tipoincidencia/tipoincidencia'])
+                ]
+            ]);        
         ?>
     </div>
     <div class='col-md-12'>
@@ -151,7 +181,7 @@ $this->registerJs(
         <?php
             $initialPreview = "";
             if(!$model->isNewRecord && !empty($model->imagen)){
-                $path=Url::to('/uploads/'.$model->imagen, true);
+                $path=Url::to('@web/uploads/'.$model->imagen, true);
                 $initialPreview = Html::img($path,['class' => 'file-preview-image']);
                 echo Html::hiddenInput('imgUpdate', $model->imagen);
             } 

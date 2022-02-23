@@ -57,8 +57,8 @@ class Parroquias extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_parroquia' => Yii::t('app', 'Id Parroquia'),
-            'id_municipio' => Yii::t('app', 'Id Municipio'),
+            'id_parroquia' => Yii::t('app', 'Parroquia'),
+            'id_municipio' => Yii::t('app', 'Municipio'),
             'parroquia' => Yii::t('app', 'Parroquia'),
             'ip_log' => Yii::t('app', 'Ip Log'),
             'usuario_creador' => Yii::t('app', 'Usuario Creador'),

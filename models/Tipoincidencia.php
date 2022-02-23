@@ -57,9 +57,9 @@ class Tipoincidencia extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_tipo_incidencia' => Yii::t('app', 'Id Tipo Incidencia'),
-            'id_categoria_incidencia' => Yii::t('app', 'Id Categoria Incidencia'),
-            'nombre_tipo_incidencia' => Yii::t('app', 'Nombre Tipo Incidencia'),
+            'id_tipo_incidencia' => Yii::t('app', 'Tipo Incidencia'),
+            'id_categoria_incidencia' => Yii::t('app', 'Categoria Incidencia'),
+            'nombre_tipo_incidencia' => Yii::t('app', 'Nombre de Tipo Incidencia'),
             'ip_log' => Yii::t('app', 'Ip Log'),
             'usuario_creador' => Yii::t('app', 'Usuario Creador'),
             'usuario_modificador' => Yii::t('app', 'Usuario Modificador'),

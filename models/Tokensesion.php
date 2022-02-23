@@ -62,7 +62,7 @@ class Tokensesion extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_token_sesion' => Yii::t('app', 'Id Token Sesion'),
+            'id_token_sesion' => Yii::t('app', 'Token Sesion'),
             'token_sesion' => Yii::t('app', 'Token Sesion'),
             'cedula' => Yii::t('app', 'Cedula'),
             'telefono_contacto' => Yii::t('app', 'Telefono Contacto'),

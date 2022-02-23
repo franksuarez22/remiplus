@@ -3,8 +3,13 @@
 namespace app\controllers;
 
 use Yii;
+use app\components\ComplementFunctions as cf;
 use app\models\Incidencias;
 use app\models\IncidenciasSearch;
+use app\models\Personas;
+use mdm\admin\models\User;
+use app\models\Incidenciaspersonas;
+use app\models\Incidenciasestatus;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -41,10 +46,14 @@ class IncidenciasController extends Controller
     {    
         $searchModel = new IncidenciasSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        if(Yii::$app->user->getId()!==null){
+            $usuario = User::findIdentity(Yii::$app->user->getId());
+            $Personas = Personas::findOne(['cedula'=>$usuario->cedula, 'estatus' => true]);
+        }
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'Personas' => $Personas,
         ]);
     }
 
@@ -98,7 +107,18 @@ class IncidenciasController extends Controller
     {
         $request = Yii::$app->request;
         $model = new Incidencias();  
-
+        $Incidenciaspersonas = new Incidenciaspersonas();
+        $Incidenciasestatus = new Incidenciasestatus();
+        if(Yii::$app->user->getId()!==null){
+            $usuario = User::findIdentity(Yii::$app->user->getId());
+            $Personas = Personas::findOne(['cedula'=>$usuario->cedula, 'estatus' => true]);
+            //cf::iam([$usuario,$Personas],true);
+            $model->id_estado=$Personas->id_estado;
+            $model->id_municipio=$Personas->id_municipio;
+            $model->id_parroquia=$Personas->id_parroquia;
+            $model->id_ciudad=$Personas->id_ciudad;
+        }
+        //cf::iam([$usuario,$Personas],true);
         if($request->isAjax){
             /*
             *   Process for ajax request
@@ -115,56 +135,114 @@ class IncidenciasController extends Controller
         
                 ];         
             }else{ 
-                if($model->load($request->post())){
-                    $uploadedFile = UploadedFile::getInstance($model, 'imagen');
-                    if($uploadedFile){
-                        $model->imagen = $uploadedFile->baseName. '.' . $uploadedFile->extension;
-                    }
-                    if ($model->validate()) {
-                        Yii::$app->params['uploadPath']= Yii::$app->basePath.'/web/uploads/';
-                        $uploadedFile->saveAs(Yii::$app->params['uploadPath'] . $uploadedFile->baseName. '.' . $uploadedFile->extension);
-                        if($model->save()){
+                $model->load($request->post());                                             
+                $valido = true;
+                $valido = $model->validate() && $valido;
+
+                $uploadedFile = UploadedFile::getInstance($model, 'imagen');
+                if($uploadedFile){
+                    $model->imagen = $uploadedFile->baseName. '.' . $uploadedFile->extension;
+                }
+
+                if($valido){
+                    $transaction = $model::getDb()->beginTransaction();
+                    try {
+                        $guardado = true;
+                        $guardado = $model->save(false) && $guardado;
+                        $ultimoIdIncidencia=$model->primaryKey;
+
+                        $Incidenciaspersonas->id_incidencia = $ultimoIdIncidencia;
+                        $Incidenciaspersonas->id_persona = $Personas->id_persona;
+                        $Incidenciaspersonas->validate();
+                        $guardado = $Incidenciaspersonas->save(false) && $guardado;
+
+                        /*$Incidenciasestatus->id_denuncia = $ultimoIdIncidencia;
+                        $Incidenciasestatus->id_estatus_incidencia = 1;//Abierta
+                        $Incidenciasestatus->fecha_cambio_estatus = date('Y-m-d');
+                        $Incidenciasestatus->observaciones = 'Incidencia Abierta';
+                        $Incidenciasestatus->validate();
+                        $Incidenciasestatus->save(false);*/
+                        if($guardado){
+                            $transaction->commit();
+                            if($uploadedFile){
+                                Yii::$app->params['uploadPath']= Yii::$app->basePath.'/web/uploads/';
+                                $uploadedFile->saveAs(Yii::$app->params['uploadPath'] . $uploadedFile->baseName. '.' . $uploadedFile->extension);
+                            }
                             return [
                                 'forceReload'=>'#crud-datatable-incidencias-pjax',
                                 'title'=> "Incidencias",
                                 'content'=>'<span class="text-success">Datos Guardados</span>',
                                 'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                        Html::a('Guardar Nuevo',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                                        Html::a('Guardar Nueva',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                    
+                            ];
+                        }     
+                    } catch(\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
+                            return [
+                                'title'=> "Incidencias",
+                                'content'=>'<span class="text-danger">Datos No Guardados</span>',
+                                'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"])
                     
                             ]; 
-                        }              
                     }
-          
-                    return [
-                        'title'=> "Incidencias",
-                        'content'=>$this->renderAjax('create', [
-                            'model' => $model,
-                        ]),
-                        'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                    Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
-            
-                    ];         
                 }
+                return [
+                    'title'=> "Incidencias",
+                    'content'=>$this->renderAjax('create', [
+                        'model' => $model,
+                    ]),
+                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
+        
+                ];         
             }
         }else{
             /*
             *   Process for non-ajax request
             */
             if ($model->load($request->post())) {
+                $valido = true;
+                $valido = $model->validate() && $valido; 
+
                 $uploadedFile = UploadedFile::getInstance($model, 'imagen');
                 if($uploadedFile){
                     $model->imagen = $uploadedFile->baseName. '.' . $uploadedFile->extension;
                 }
-                if ($model->validate()) {
-                    Yii::$app->params['uploadPath']= Yii::$app->basePath.'/web/uploads/';
-                    $uploadedFile->saveAs(Yii::$app->params['uploadPath'] . $uploadedFile->baseName. '.' . $uploadedFile->extension);
-                    if($model->save()){
-                        return $this->redirect(['view', 'id' => $model->id_incidencia]);
-                    }              
+
+                if($valido){
+                    $transaction = $model::getDb()->beginTransaction();
+                    try {
+                        $guardado = true;
+                        $guardado = $model->save(false) && $guardado; 
+                        $ultimoIdIncidencia=$model->primaryKey;
+
+                        $Incidenciaspersonas->id_incidencia = $ultimoIdIncidencia;
+                        $Incidenciaspersonas->id_persona = $Personas->id_persona;
+                        $Incidenciaspersonas->validate();
+                        $guardado = $Incidenciaspersonas->save(false) && $guardado; 
+
+                        /*$Incidenciasestatus->id_denuncia = $ultimoIdIncidencia;
+                        $Incidenciasestatus->id_estatus_incidencia = 1;//Abierta
+                        $Incidenciasestatus->fecha_cambio_estatus = date('Y-m-d');
+                        $Incidenciasestatus->observaciones = 'Incidencia Abierta';
+                        $Incidenciasestatus->validate();
+                        $Incidenciasestatus->save(false);*/
+                        if($guardado){
+                            $transaction->commit();
+                            if($uploadedFile){
+                                Yii::$app->params['uploadPath']= Yii::$app->basePath.'/web/uploads/';
+                                $uploadedFile->saveAs(Yii::$app->params['uploadPath'] . $uploadedFile->baseName. '.' . $uploadedFile->extension);
+                            }
+                            
+                            return $this->redirect(['view', 'id' => $model->id_incidencia]);
+                        } 
+                    } catch(\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
+                    }
                 }
-                return $this->render('create', [
-                    'model' => $model,
-                ]);
             }
             return $this->render('create', [
                 'model' => $model,
@@ -340,5 +418,22 @@ class IncidenciasController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionBandejaincidencias()
+    {
+        $request = Yii::$app->request;
+        $searchModelIncidencias = new IncidenciasSearch();
+        $dataProviderIncidencias = $searchModelIncidencias->search(Yii::$app->request->queryParams);
+        if(Yii::$app->user->getId()!==null){
+            $usuario = User::findIdentity(Yii::$app->user->getId());
+            $Personas = Personas::findOne(['cedula'=>$usuario->cedula, 'estatus' => true]);
+        }
+
+        return $this->render('bandejaincidencias', [
+            'searchModelIncidencias' => $searchModelIncidencias,
+            'dataProviderIncidencias' => $dataProviderIncidencias,
+            'Personas' => $Personas,
+        ]);     
     }
 }

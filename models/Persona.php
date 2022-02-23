@@ -70,8 +70,8 @@ class Persona extends \yii\db\ActiveRecord
     {
         return [
             'letra' => Yii::t('app', 'Letra'),
-            'cedula' => Yii::t('app', 'Cedula'),
-            'pais_origen' => Yii::t('app', 'Pais Origen'),
+            'cedula' => Yii::t('app', 'Cédula'),
+            'pais_origen' => Yii::t('app', 'País Origen'),
             'nacionalidad' => Yii::t('app', 'Nacionalidad'),
             'primer_nombre' => Yii::t('app', 'Primer Nombre'),
             'segundo_nombre' => Yii::t('app', 'Segundo Nombre'),

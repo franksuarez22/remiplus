@@ -274,4 +274,20 @@ class TipoincidenciaController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+   public function actionTipoincidencia() { 
+       Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; 
+       $out = []; 
+       if (isset($_POST['depdrop_parents'])) { 
+           $parents = $_POST['depdrop_parents']; 
+           $id_categoria = $parents[0]; 
+           if ($id_categoria != null) { 
+               $data= Tipoincidencia::find() 
+               ->where(['id_categoria_incidencia'=>$id_categoria]) 
+               ->select(['id_tipo_incidencia as id','nombre_tipo_incidencia AS name'])->asArray()->all(); 
+               return ['output'=>$data, 'selected'=>'']; 
+           } 
+       } 
+       return ['output'=>'', 'selected'=>'']; 
+   }
 }

@@ -10,5 +10,7 @@ use yii\bootstrap4\Html;
 <div class="denuncias-create">
     <?= $this->render('_form', [
         'model' => $model,
+        'Denunciasevidencias' => $Denunciasevidencias,
+        'pks' => $pks,
     ]) ?>
 </div>

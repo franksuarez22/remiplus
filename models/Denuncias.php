@@ -19,12 +19,14 @@ use app\components\ObtenerLogSeguridad;
  * @property string|null $punto_referencia Punto de referencia
  * @property float $latitud Latitud
  * @property float $longitud Longitud
+ * @property int $nivel_dificultad
  * @property string $ip_log Ip Log
  * @property int $usuario_creador Usuario Creador
  * @property int|null $usuario_modificador Usuario Modificador
  * @property string $fecha_creacion Fecha de Creación
  * @property string|null $fecha_modificacion Fecha de Modificación
  * @property bool $estatus Estatus
+ * @property int|null $id_categoria_incidencia Categoria
  */
 class Denuncias extends \yii\db\ActiveRecord
 {
@@ -42,9 +44,9 @@ class Denuncias extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'descripcion', 'direccion', 'latitud', 'longitud'], 'required'],
-            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador'], 'default', 'value' => null],
-            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador'], 'integer'],
+            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'descripcion', 'direccion', 'latitud', 'longitud', 'nivel_dificultad', 'id_categoria_incidencia'], 'required'],
+            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador', 'id_categoria_incidencia'], 'default', 'value' => null],
+            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador', 'id_categoria_incidencia'], 'integer'],
             [['descripcion', 'direccion', 'ip_log'], 'string'],
             [['latitud', 'longitud'], 'number'],
             [['fecha_creacion', 'fecha_modificacion'], 'safe'],
@@ -71,6 +73,7 @@ class Denuncias extends \yii\db\ActiveRecord
     {
         return [
             'id_denuncia' => Yii::t('app', 'Denuncia'),
+            'id_categoria_incidencia' => Yii::t('app', 'Categoria'),
             'id_tipo_incidencia' => Yii::t('app', 'Tipo Incidencia'),
             'id_estado' => Yii::t('app', 'Estado'),
             'id_municipio' => Yii::t('app', 'Municipio'),
@@ -81,6 +84,7 @@ class Denuncias extends \yii\db\ActiveRecord
             'punto_referencia' => Yii::t('app', 'Punto Referencia'),
             'latitud' => Yii::t('app', 'Latitud'),
             'longitud' => Yii::t('app', 'Longitud'),
+            'nivel_dificultad' => Yii::t('app', 'Nivel Dificultad'),
             'ip_log' => Yii::t('app', 'Ip Log'),
             'usuario_creador' => Yii::t('app', 'Usuario Creador'),
             'usuario_modificador' => Yii::t('app', 'Usuario Modificador'),
@@ -90,9 +94,12 @@ class Denuncias extends \yii\db\ActiveRecord
         ];
     }
     /*Relaciones*/
+
+    public function getCategoria(){
+        return $this->hasOne(Categoriaincidencia::className(),['id_categoria_incidencia' => 'id_categoria_incidencia']);
+    }    
     
-    
-     public function getTipoincidencia(){
+    public function getTipoincidencia(){
         return $this->hasOne(Tipoincidencia::className(),['id_tipo_incidencia' => 'id_tipo_incidencia']);
     }
     

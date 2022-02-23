@@ -55,7 +55,7 @@ class Categoriaincidencia extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_categoria_incidencia' => 'Id Categoria Incidencia',
+            'id_categoria_incidencia' => 'Categoria Incidencia',
             'nombre_categoria_incidencia' => 'Nombre Categoria Incidencia',
             'ip_log' => 'Ip Log',
             'usuario_creador' => 'Usuario Creador',

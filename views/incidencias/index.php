@@ -6,7 +6,6 @@ use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset; 
 use johnitvn\ajaxcrud\BulkButtonWidget;
 use mdm\admin\components\Helper;
-
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\IncidenciasSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -17,12 +16,20 @@ $this->title = Yii::t('app', 'Registro de Incidencias');
 
 CrudAsset::register($this);
 
+    echo"<br><br>";
 $nuevo=$exportar='';
-    if(Helper::checkRoute('create')){
-       $nuevo = Html::a('Nueva Incidencia <i class="glyphicon glyphicon-plus"></i>', ['/incidencias/create'],
-                ['data-pjax' => 1, 'role'=>'modal-remote', 'title'=> 'Nueva Incidencia','class'=>'btn btn-primary']);
+    if(Helper::checkRoute('/incidencias/create')){
+        echo $nuevo = Html::a('Generar nueva Incidencia <i class="glyphicon glyphicon-plus"></i>', ['/incidencias/create'],
+                ['data-pjax' => 1, 'role'=>'modal-remote', 'title'=> 'Generar nueva Incidencia','class'=>'btn btn-primary']);
     }
-
+    if(Helper::checkRoute('/denuncias/create')){
+        echo $nuevo = Html::a('Nueva Denuncia <i class="glyphicon glyphicon-plus"></i>', ['/denuncias/create'],
+                ['role'=>'modal-remote-bulkk','title'=> 'Nueva Denuncia','class'=>'btn btn-primary','id'=>'nueva_denuncia','data-confirm'=>false, 'data-method'=>false,// for overide yii data api
+                                    'data-request-method'=>'post',
+                                    'data-confirm-title'=>'¿Está seguro?',
+                                    'data-confirm-message'=>'Se asociaran las incidencias seleccionadas en una sola denuncia formal']);
+    }    
+    echo"<br><br>";
     if(Helper::checkRoute('gridview/export/download')){
        $exportar = '{export}';
     }
@@ -37,7 +44,7 @@ $nuevo=$exportar='';
             'columns' => require(__DIR__.'/_columns.php'),
             'toolbar'=> [
                 ['content'=>
-                    $nuevo.
+                    //$nuevo.
                     Html::a('<i class="glyphicon glyphicon-repeat"></i>', Url::to(''),
                     ['data-pjax'=>1, 'class'=>'btn btn-default', 'title'=>'Actualizar']).
                     '{toggleData}'.
@@ -68,10 +75,14 @@ $nuevo=$exportar='';
         ])?>
     </div>
 </div>
-<?php Modal::begin([
-    "id"=>"ajaxCrudModal",
-    "footer"=>"",// always need it for jquery plugin
-    "size"=>Modal::SIZE_LARGE,
-    "dialogOptions"=>["data-modal-size"=>Modal::SIZE_LARGE,]
-])?>
-<?php Modal::end(); ?>
+<?php 
+if(!isset($tab)){
+    Modal::begin([
+        "id"=>"ajaxCrudModal",
+        "footer"=>"",// always need it for jquery plugin
+        "size"=>Modal::SIZE_LARGE,
+        "dialogOptions"=>["data-modal-size"=>Modal::SIZE_LARGE,]
+    ]);
+    Modal::end(); 
+}
+?>

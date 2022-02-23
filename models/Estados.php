@@ -55,7 +55,7 @@ class Estados extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_estado' => 'Id Estado',
+            'id_estado' => 'Estado',
             'estado' => 'Estado',
             'ip_log' => 'Ip Log',
             'usuario_creador' => 'Usuario Creador',

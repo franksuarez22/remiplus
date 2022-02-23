@@ -2,12 +2,13 @@
 use yii\helpers\Url;
 use yii\bootstrap4\Html;
 use mdm\admin\components\Helper;
-
+use kartik\grid\GridView;
+use yii\helpers\ArrayHelper;
 return [
-    [
+    /*[
         'class' => 'kartik\grid\CheckboxColumn',
         'width' => '20px',
-    ],
+    ],*/
     [
         'class' => 'kartik\grid\SerialColumn',
         'width' => '30px',
@@ -18,29 +19,55 @@ return [
     // ],
     [
         'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'id_categoria_incidencia',
+        'value'=>'categoria.nombre_categoria_incidencia',
+        'filterType'=>GridView::FILTER_SELECT2,
+        'filter'=>ArrayHelper::map(app\models\Categoriaincidencia::find(['estatus' => true])->all(),'id_categoria_incidencia','nombre_categoria_incidencia'),
+        'filterWidgetOptions'=>[
+            'pluginOptions'=>['allowClear'=>true],
+        ],
+        'filterInputOptions'=>['placeholder'=>''],
+        'format'=>'raw'
+    ],
+    [
+        'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_tipo_incidencia',
         'value'=>'tipoincidencia.nombre_tipo_incidencia',
+        'filterType'=>GridView::FILTER_SELECT2,
+        'filter'=>ArrayHelper::map(app\models\Tipoincidencia::find()->where(['estatus' => true])->all(),'id_tipo_incidencia','nombre_tipo_incidencia'),
+        'filterWidgetOptions'=>[
+            'pluginOptions'=>['allowClear'=>true],
+        ],
+        'filterInputOptions'=>['placeholder'=>''],
+        'format'=>'raw'
     ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'id_estado',
-        'value'=>'estado.estado',
-    ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'id_municipio',
-        'value'=>'municipio.municipio',
-    ],
+    // [
+    //     'class'=>'\kartik\grid\DataColumn',
+    //     'attribute'=>'id_estado',
+    //     'value'=>'estado.estado',
+    // ],
+    // [
+    //     'class'=>'\kartik\grid\DataColumn',
+    //     'attribute'=>'id_municipio',
+    //     'value'=>'municipio.municipio',
+    // ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_parroquia',
         'value'=>'parroquia.parroquia',
+        'filterType'=>GridView::FILTER_SELECT2,
+        'filter'=>ArrayHelper::map(app\models\Parroquias::find()->where(['id_municipio' => $Personas->id_municipio,'estatus' => true])->all(),'id_parroquia','parroquia'),
+        'filterWidgetOptions'=>[
+            'pluginOptions'=>['allowClear'=>true],
+        ],
+        'filterInputOptions'=>['placeholder'=>''],
+        'format'=>'raw'
     ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'id_ciudad',
-        'value'=>'ciudad.ciudad'
-    ],
+    // [
+    //     'class'=>'\kartik\grid\DataColumn',
+    //     'attribute'=>'id_ciudad',
+    //     'value'=>'ciudad.ciudad'
+    // ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'descripcion',
@@ -90,6 +117,17 @@ return [
         'dropdown' => false,
         'vAlign'=>'middle',
         'template' => Helper::filterActionColumn('{view} {update} {delete}'),
+        'visibleButtons' => [
+            'view' => function ($model) {
+                return Helper::checkRoute('/denuncias/view');
+            },
+            'update' => function ($model) {
+                return Helper::checkRoute('/denuncias/update');
+            },
+            'delete' => function ($model) {
+                return Helper::checkRoute('/denuncias/delete');
+            },
+        ],
         'urlCreator' => function($action, $model, $key, $index) { 
                 return Url::to(['/denuncias/'.$action,'id'=>$key]);
         },

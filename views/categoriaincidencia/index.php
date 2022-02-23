@@ -11,7 +11,7 @@ use mdm\admin\components\Helper;
 /* @var $searchModel app\models\CategoriaincidenciaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Categoriaincidencias');
+$this->title = Yii::t('app', 'Categoria de la incidencias');
 $this->params['breadcrumbs'][] = $this->title;
 
 CrudAsset::register($this);
@@ -48,7 +48,7 @@ $nuevo=$exportar='';
             'responsive' => true,          
             'panel' => [
                 'type' => 'primary', 
-                'heading' => '<i class="glyphicon glyphicon-list"></i> Listado de Categoriaincidencias',
+                'heading' => '<i class="glyphicon glyphicon-list"></i> Listado de Categoria de las incidencias',
                 'before'=>'<em>* Cambie el tamaño de las columnas de la tabla como una hoja de cálculo arrastrando los bordes de la columna.</em>',
                 'after'=>Helper::checkRoute('bulk-delete') ? BulkButtonWidget::widget([
                             'buttons'=>Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Borrar Todo',

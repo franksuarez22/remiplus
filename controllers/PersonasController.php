@@ -11,6 +11,9 @@ use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
 use mdm\admin\components\Helper;
+use mdm\admin\models\User;
+use mdm\admin\models\form\LoginFormDenunciante;
+use app\components\ComplementFunctions as cf;
 /**
  * PersonasController implements the CRUD actions for Personas model.
  */
@@ -84,8 +87,14 @@ class PersonasController extends Controller
      */
     public function actionCreate()
     {
+        extract($_GET);
+        $login = false;
         $request = Yii::$app->request;
-        $model = new Personas();  
+        if(isset($id)){
+            $model =  Personas::findOne(['id_persona'=>$id, 'estatus' => true]);
+        }else{
+            $model = new Personas();  
+        }
 
         if($request->isAjax){
             /*
@@ -132,6 +141,7 @@ class PersonasController extends Controller
             if ($session->isActive){
                 $model->telefono_contacto=$session['telefono'];
                 $model->correo_electronico=$session['correo'];
+                //buscar en SAIME o web services
                 $persona = \app\models\Persona::find()->where(['cedula' => $session['cedula']])->one();
                 if (isset($persona) && !empty($persona)) {
                     $model->id_nacionalidad=isset($persona->nacionalidad)&&$persona->nacionalidad=="VEN"?1:2;
@@ -144,10 +154,40 @@ class PersonasController extends Controller
                     $model->fecha_nacimiento=$persona->fecha_nacimiento;
                 }
             }
-            //buscar en SAIME o web services
+        
             if ($model->load($request->post()) && $model->save()) {
-                //return $this->redirect(['view', 'id' => $model->id_persona]);
-                return $this->redirect(['/incidencias/indexdenunciante', 'idp' => $model->id_persona]);
+                $Usuario = User::findByCedula($model->cedula);
+                if(isset($Usuario) && !empty($Usuario) && !is_null($Usuario)){
+                    $login = true;
+                }else{//No lo consiguío en user
+                    //Procedo a crear un usuario con los datos de personas
+                    $user = new User;
+                    $user->username = $model->cedula;
+                    $user->email = $model->correo_electronico;
+                    $user->status = 10;
+                    $user->generateAuthKey();
+                    $user->cedula = $model->cedula;
+                    $user->save();               
+                    $auth = \Yii::$app->authManager;
+                    $authorRole = $auth->getRole('Denunciante');
+                    $auth->assign($authorRole, $user->id); 
+                    $login = true;  
+                }
+                $LoginFormDenunciante = new LoginFormDenunciante(); 
+                $LoginFormDenunciante->id_nacionalidad = $model->id_nacionalidad;
+                $LoginFormDenunciante->cedula = $model->cedula;
+                $LoginFormDenunciante->telefono = $model->telefono_contacto;
+                $LoginFormDenunciante->correo = $model->correo_electronico;
+                $LoginFormDenunciante->token = $session['token'];
+                if(Yii::$app->getUser()->isGuest && $login==true && $LoginFormDenunciante->login()){//hago login buscando el usuario por la cédula
+                    $rol = cf::rolUsuario(Yii::$app->user->getId());
+                    if(in_array('Denunciante', $rol)){
+                        return $this->redirect(['/incidencias/bandejaincidencias']);
+                    }else{
+                        return $this->redirect(['/denuncias/bandejadenuncias']);
+                    }
+                }
+                return $this->redirect(['view', 'id' => $model->id_persona]);
             } else {
                 return $this->render('create', [
                     'model' => $model,

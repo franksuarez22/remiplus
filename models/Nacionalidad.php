@@ -55,8 +55,8 @@ class Nacionalidad extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_nacionalidad' => Yii::t('app', 'Id Nacionalidad'),
-            'descripcion_nacionalidad' => Yii::t('app', 'Descripcion Nacionalidad'),
+            'id_nacionalidad' => Yii::t('app', 'Nacionalidad'),
+            'descripcion_nacionalidad' => Yii::t('app', 'Descripción de Nacionalidad'),
             'ip_log' => Yii::t('app', 'Ip Log'),
             'usuario_creador' => Yii::t('app', 'Usuario Creador'),
             'usuario_modificador' => Yii::t('app', 'Usuario Modificador'),

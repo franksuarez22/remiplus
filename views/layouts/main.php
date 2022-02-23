@@ -10,8 +10,13 @@ use yii\bootstrap4\Html;
 use yii\bootstrap4\Nav;
 use yii\bootstrap4\NavBar;
 use mdm\admin\components\MenuHelper;
+use app\components\ComplementFunctions;
 
 AppAsset::register($this);
+
+$this->registerJsFile('@web/js/funcionesgenerales.js',[
+    'depends'=>[yii\bootstrap4\BootstrapPluginAsset::className()]
+]);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -32,7 +37,7 @@ AppAsset::register($this);
 if (Yii::$app->user->isGuest) {
     $menuItems = [/*['label' => 'Contáctanos', 'url' => ['/site/contact']],*/
         ['label' => 'Iniciar sesión', 'url' => ['/admin/user/login']],
-        ['label' => 'Ingresar incidencia', 'url' => ['/site/logindenunciante']],
+        ['label' => 'Ingresar incidencia', 'url' => ['/admin/user/logindenunciante']],
         /*['label' => 'Registrarse', 'url' => ['/site/signup']]*/];
 } else {
     $menu = [['label' => 'Inicio', 'url' => ['/site/index']],
@@ -50,7 +55,7 @@ if (Yii::$app->user->isGuest) {
 }
 
     NavBar::begin([
-        'brandLabel' => 'Inicio',//Yii::$app->name,
+        'brandLabel' => Yii::$app->name,
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',

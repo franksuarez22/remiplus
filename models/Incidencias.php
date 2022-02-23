@@ -26,6 +26,7 @@ use app\components\ObtenerLogSeguridad;
  * @property string $fecha_creacion Fecha de Creación
  * @property string|null $fecha_modificacion Fecha de Modificación
  * @property bool $estatus Estatus
+ * @property int|null $id_categoria_incidencia Categoria de incidencia
  */
 class Incidencias extends \yii\db\ActiveRecord
 {
@@ -43,9 +44,9 @@ class Incidencias extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'descripcion', 'direccion', 'latitud', 'longitud'], 'required'],
-            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador'], 'default', 'value' => null],
-            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador'], 'integer'],
+            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'descripcion', 'direccion', 'latitud', 'longitud', 'id_categoria_incidencia'], 'required'],
+            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador', 'id_categoria_incidencia'], 'default', 'value' => null],
+            [['id_tipo_incidencia', 'id_estado', 'id_municipio', 'id_parroquia', 'id_ciudad', 'usuario_creador', 'usuario_modificador', 'id_categoria_incidencia'], 'integer'],
             [['descripcion', 'direccion', 'ip_log'], 'string'],
             [['latitud', 'longitud'], 'number'],
             [['fecha_creacion', 'fecha_modificacion', 'imagen'], 'safe'],
@@ -54,7 +55,7 @@ class Incidencias extends \yii\db\ActiveRecord
             //[[''], 'filter', 'filter' => 'mb_strtoupper'],
             [['fecha_creacion'], 'default', 'value' => ObtenerLogSeguridad::cdbexpression()],
             [['fecha_modificacion'], 'filter', 'filter' => function(){return ObtenerLogSeguridad::cdbexpression();},'when' => function($model){return !$model->isNewRecord;}],
-            [['usuario_creador'], 'default', 'value' => isset(Yii::$app->user->id)? Yii::$app->user->id: 1],
+            [['usuario_creador'], 'default', 'value' => Yii::$app->user->id],
             [['usuario_modificador'], 'filter', 'filter' => function(){return Yii::$app->user->id;},'when' => function($model){return !$model->isNewRecord;}],
             [['ip_log'], 'filter', 'filter' => function(){return ObtenerLogSeguridad::getRealIpAddr();}],
             [['id_ciudad'], 'exist', 'skipOnError' => true, 'targetClass' => Ciudades::className(), 'targetAttribute' => ['id_ciudad' => 'id_ciudad']],
@@ -71,6 +72,7 @@ class Incidencias extends \yii\db\ActiveRecord
         return [
             'id_incidencia' => Yii::t('app', 'Incidencia'),
             'id_tipo_incidencia' => Yii::t('app', 'Tipo de Incidencia'),
+            'id_categoria_incidencia' => Yii::t('app', 'Categoria'),
             'id_estado' => Yii::t('app', 'Estado'),
             'id_municipio' => Yii::t('app', 'Municipio'),
             'id_parroquia' => Yii::t('app', 'Parroquia'),
@@ -94,6 +96,10 @@ class Incidencias extends \yii\db\ActiveRecord
     
     public function getTipoincidencia(){
         return $this->hasOne(Tipoincidencia::className(),['id_tipo_incidencia' => 'id_tipo_incidencia']);
+    }
+
+    public function getCategoria(){
+        return $this->hasOne(Categoriaincidencia::className(),['id_categoria_incidencia' => 'id_categoria_incidencia']);
     }
 
     public function getCiudad(){

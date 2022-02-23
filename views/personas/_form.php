@@ -149,7 +149,7 @@ use kartik\date\DatePicker;
         <?php 
             if(!empty($model->id_parroquia)){
                 $Ciudades = app\models\Ciudades::find()->where(['id_parroquia' => $model->id_parroquia, 'estatus' => true])->all();
-                $listaCiudades = ArrayHelper::map($Ciudades,'id_ciudad','descripcion');
+                $listaCiudades = ArrayHelper::map($Ciudades,'id_ciudad','ciudad');
             }else{
                 $listaCiudades = [];
                 $model->id_ciudad = '';
